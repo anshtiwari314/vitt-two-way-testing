@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel = "icon" href = "logo.png" type = "image/x-icon">
+    <title>Vitt Meeting Point</title>
+</head>
+<style>
+    #video-grid{
+        display: grid;
+        grid-template-columns: repeat(auto-fill,300px);
+        grid-auto-rows:300px;
+
+    }
+    video{
+        width:100%;
+        height:100%;
+        object-fit: cover;
+    
+  -webkit-transform: scaleX(-1);
+  transform: scaleX(-1);
+    }
+</style>
+   
+ <script defer src="https://unpkg.com/peerjs@1.4.7/dist/peerjs.min.js"></script>
+ <!-- <script defer src="socket.io/socket.io.js"></script> -->
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.5.3/socket.io.js" integrity="sha512-iWPnCISAd/J+ZacwV2mbNLCaPGRrRo5OS81lKTVPtRg1wGTC20Cfmp5Us5RcbLv42QLdbAWl0MI57yox5VecQg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+ <script defer src="https://cdn.webrtc-experiment.com/ConcatenateBlobs.js"></script>
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/uuid/8.2.0/uuidv4.min.js" integrity="sha512-W6Yf3E7UBUKz5LqkjOHga4hkDX3huRhAvV8I6MFuZ0zX+5ttmVldY8nz9q26SwBItFrb9XSKNMiWEsKg8rDmXg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+ <script defer src="script2.js"></script>
+ 
+ <style>
+    *{
+        padding:0;
+        margin:0;
+        box-sizing: border-box;
+    }
+    html{
+        font-size: 62.5%;
+    }
+    body{
+        background-color: #636363;
+    }
+    
+    
+ </style>
+ <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<link rel="stylesheet" href="chat-window.css"/> 
+
+<body>
+    <div class="chat-window">
+        <div class="cont">
+            <div class="box">
+                
+                <!-- <div class="msg">
+                    <div class="text-msg">
+                        <div class="msg-wrapper">
+                            <p>I suggest to start this call a bit later</p>
+                        </div>
+                        <div class="suggestions">
+                            <button>Death only</button>
+                            <button>Critical illness</button>
+                        </div>
+                    </div>
+                    
+                </div> -->
+
+                <!-- <div class="msg">
+                    <div class="suggestions">
+                        <button>Death only</button>
+                        <button>Critical illness</button>
+                        <button>Money back</button>
+                    </div>
+                </div> -->
+                
+                <!-- <div class="msg">
+                    <div class="msg-wrapper">
+                        <p>I suggest to start this call a bit later</p>
+                    </div>
+                </div> -->
+
+                <!-- <div class="msg">
+                    <div class="msg-wrapper">
+                        <p>I suggest to start this call a bit later</p>
+                    </div>
+                </div> -->
+
+                <!-- <div class="msg">
+                    <div class="image-msg">
+                        <img src="./image-card.png" onclick="fullSizeImage(this)"/>
+                        <div class="image-text">
+                            <p>Sure ma’am give us a moment
+                                we’ll be extremely happy to help
+                            </p>
+                        </div>
+
+                        <div class="suggestions">
+                            <button>Death only</button>
+                            <button>Critical illness</button>
+                            <button>Money back</button>
+                        </div>
+                    </div>
+                    
+                </div> -->
+
+                <!-- <div class="msg">
+                    <div class="image-msg">
+                        <img src="https://www.teahub.io/photos/full/301-3015927_naruto.jpg" class="image-active" onclick="fullSizeImage(this)"/>
+                        <p>I am a good image</p>
+                    </div>
+                    
+                </div> -->
+
+                <!-- <div class="msg">
+                    <div class="msg-wrapper">
+                        <p>I suggest to start this call a bit later</p>
+                    </div>
+                </div> -->
+
+                <!-- <div class="msg">
+                    <h1 class="form-header">Types of Insurance Plans</h1>
+                    <div class="form-input">
+                        <input type="text" placeholder="please enter"/>
+                    </div>
+                    <div class="icon-wrapper">
+                        <button>
+                            <i class="fa-regular fa-paper-plane"></i>
+                        </button>
+                    </div>
+                </div> -->
+
+                <!-- <form class="msg">
+                    <h1 class="form-header">Types of Insurance Plans</h1>
+                    <div class="form-radio">
+                        <div class="radio">
+                            <input type="radio" id="html" name="lang"/>
+                            <div class="label-wrapper">
+                                <label for="html">Html</label>
+                            </div>
+                        </div>
+                        <div class="radio">
+                            <input type="radio" id="css" name="lang"/>
+                            <div class="label-wrapper">
+                                <label for="css">Css</label>
+                            </div>
+                            
+                        </div>
+                        <div class="radio">
+                            <input type="radio" id="java" name="lang"/>
+                            <div class="label-wrapper">
+                                <label for="java">Java</label>
+                            </div>
+                        </div>
+                        <div class="radio">
+                            <input type="radio" id="python" name="lang"/>
+                            <div class="label-wrapper">
+                                <label for="python">Python</label>
+                            </div>
+                        </div>
+                    </div> 
+                    <div class="icon-wrapper">
+                        <button type="submit">
+                            <i class="fa-regular fa-paper-plane"></i>
+                        </button>
+                        
+                    </div>
+                </form> -->
+                
+            </div>
+            <div class="box-footer">
+                <div class="footer-wrapper">
+                    <i class="fa-solid fa-bars"></i> 
+                    <input placeholder="please type here"/>
+                    <i class="fa-solid fa-play"></i>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script> 
+    // function fullSizeImage(e){
+    //     e.classList.toggle("image-active")
+    // }
+    function toggleFooter(boolean){
+        if(boolean===false){
+            if(!document.querySelector('.box-footer').classList.contains('hidden') )
+                document.querySelector('.box-footer').classList.add('hidden')
+        }else 
+        document.querySelector('.box-footer').classList.remove('hidden')
+       }
+
+       let uuid = uuidv4()
+    console.log(uuid)
+    function submitData(ele,obj){
+        let query;
+        let isform =false
+        toggleFooter(true)
+        if(obj.suggestions){
+            
+            query = ele.innerText
+            ele.closest('.suggestions').remove()
+        }else if(obj.input){
+            query = ele.closest('.msg').querySelector('input').value
+           // query = ele.value
+            isform=true
+            ele.closest('.msg').remove()
+        }else if(obj.radio){
+            isform =true
+            query=ele.value
+            ele.closest('.msg').remove()
+        }
+        console.log('i am',query,ele)
+        fetch('https://f6p70odi12.execute-api.ap-south-1.amazonaws.com',{
+                method:'POST',
+                headers:{
+                   'Accept':'application.json',
+                   'Content-Type':'application/json'
+                },
+                body:JSON.stringify({
+                    query:query,
+                    sessionid:uuid,
+                    isform:isform,
+                    cass:true
+                }),
+                cache:'default',}).then(res=>{
+                   // console.log("res from audio server",res)
+                })
+    }
+    
+    
+    // window.addEventListener('unload', function (e) {
+    // e.preventDefault();
+    
+    // fetch('https://vitt-jarvis-backend.herokuapp.com/sendData',{
+    //             method:'POST',
+    //             headers:{
+    //                'Accept':'application.json',
+    //                'Content-Type':'application/json'
+    //             },
+    //             body:JSON.stringify({
+    //                 query:'',
+    //                 sessionid:uuid,
+    //                 init:true
+    //             }),
+    //             cache:'default',}).then(res=>{
+    //                // console.log("res from audio server",res)
+    // })
+    //     });
+</script>
+</html>

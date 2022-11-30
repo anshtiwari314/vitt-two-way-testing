@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel = "icon" href = "logo.png" type = "image/x-icon">
+    <title>Vitt Meeting Point</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Libre+Baskerville&display=swap');
+        *{
+            
+        -webkit-user-drag:none;
+        -moz-user-drag:none;
+        -khtml-user-drag:none;
+        -ms-user-drag:none;
+
+        -webkit-user-select: none;
+        -ms-user-select: none;
+        -moz-user-select: none;
+        -khtml-user-select: none;
+        }
+        html{
+        font-size: 62.5%;
+        }
+        body{
+            background-color: #727272;
+            display:flex;
+            justify-content: center;
+            align-items: center;
+            height:80vh;
+        }
+       
+       h2{
+            font-size: 3rem;
+            font-family: 'Libre Baskerville', serif;
+            color:#141414;
+       }
+       button{
+        margin:0 1rem;
+        padding:1rem 1.5rem;
+        background-color: #355dd5;
+        border-radius: 1.5rem;
+        color: white;
+        font-size: 1.6rem;
+        outline:none;
+        border:none;
+        cursor: pointer;
+        text-transform: capitalize;
+       }
+       button:hover{
+        background-color: #406ef6;
+       }
+
+       @media screen and (max-width:800px){
+        html{
+            font-size: 55%;
+        }
+        
+    }
+    </style>
+    <script>
+        const ROOM_ID = sessionStorage.getItem('tempRoomId')
+        if(!ROOM_ID){
+            window.location.pathname = '/'
+        }
+
+    </script>
+</head>
+<body>
+    <div class="container">
+        <div>
+            <h2>U are Successfully leaved</h2>
+        </div>
+        
+        <br/>
+        <div>
+            <button id="reJoin">Rejoin</button>
+            <button id="returnToHome">Return to main screen</button>
+        </div>
+        
+    </div>
+</body>
+<script>
+    let reJoin = document.getElementById('reJoin')
+    let retunToHome = document.getElementById('returnToHome')
+
+    let count = 60;
+
+    reJoin.addEventListener('click',()=>{
+        window.location.pathname = ROOM_ID
+    })
+    retunToHome.addEventListener('click',()=>{
+        sessionStorage.removeItem('tempRoomId')
+        window.location.pathname = '/'
+    })
+    setInterval(()=>{
+        if(count <= 0){
+            sessionStorage.removeItem('tempRoomId')
+            window.location.pathname = '/'
+        }
+        returnToHome.innerText = `Return to main screen ${count}`
+        count--
+        },1000)
+
+</script>
+</html>

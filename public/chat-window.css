@@ -1,0 +1,289 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500&display=swap');
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing: border-box;
+}
+:root{
+    font-size:10px;
+    --font-inter:'Inter', sans-serif;
+}
+.chat-window{
+    /* border: 0.1rem solid red; */
+    /* background-color: aqua; */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width:100%;
+    height:100%;
+}
+.chat-window .cont{
+    /* background-color: red; */
+    width:70%;
+    margin:5rem 0 0 0;
+    background-color: #EDE0F8;
+    /* height:100vh; */
+}
+.chat-window .box{
+    /* width:100%; */
+    height:70vh;
+    width:30vw;
+    font-size: 1.6rem;
+    letter-spacing: 0.05rem;
+    overflow-y: scroll;
+    padding-bottom: 10vh;
+    /* border:0.1rem solid blue; */
+}
+.chat-window .box::-webkit-scrollbar {
+    display: none;
+  }
+.chat-window .box .msg{
+    
+    /* border:0.1rem solid black; */
+    margin:1.5rem 1rem; 
+    /* background-color: #F6F1FF; */
+}
+
+.chat-window .box .msg .text-msg{
+    background-color: #F6F1FF;
+    border-radius:1rem;
+}
+.chat-window .box .msg .msg-wrapper{
+    
+    width:fit-content;
+    padding:1rem 3rem;
+    /* margin: 0rem 1rem; */
+    
+    border-bottom-right-radius: 0;
+    
+}
+.chat-window .box .msg .msg-wrapper p {
+    color:#575353;
+    font-family: var(--font-inter);
+    font-weight: 400;
+    font-size: 1.6rem;
+}
+.chat-window .box .msg .suggestions {
+    display: flex;
+    font-size: 1.5rem ;
+    flex-wrap: wrap;
+    /* border:0.1rem solid red;  */
+    width:30rem;
+    margin:0 auto;
+}
+.chat-window .box .msg .suggestions button{
+    margin:0.5rem 1rem;
+    padding:1rem 1.5rem;
+    border-radius: 1rem;
+    outline:none;
+    /* border:0.1rem solid red;  */
+    border:none;
+    cursor: pointer;
+    background-color: rgb(230, 230, 230);
+}
+.chat-window .box .msg .image-msg{
+    background-color: #EFEFF0;
+    width:fit-content;
+    /* padding: 1rem 1.2rem; */
+    /* border:0.1rem solid blue; */
+    cursor:pointer;
+}
+.chat-window .box .msg .image-text{
+    /* border:0.1rem solid red; */
+    text-align: right;
+    display: flex;
+    justify-content: end;
+}
+.chat-window .box .msg .image-text p{
+    /* border:0.1rem solid green; */
+    background-color: none;
+    border-radius: 0.5rem;
+    padding:0.2rem 0.2rem;
+    margin-right: 1.5rem;
+    margin-bottom:1.5rem;
+    width:25rem;
+}
+.chat-window .box .msg img{
+    width:30rem;
+    height: 20rem;
+    object-fit: cover;
+    margin:0;
+    padding:0; 
+    /* border:0.2rem solid orange; */
+}
+.chat-window .box .msg .image-active{
+    /* position: absolute; */
+    width:90vw;
+    /* height:40rem; */
+    /* border:0.1rem solid red; */
+    object-fit: contain;
+}
+.chat-window .box .msg .image-msg p{
+    
+
+}
+
+/* footer */
+.chat-window .cont .box-footer{
+    height:10vh;
+    padding:1rem 0;
+    /* border:0.2rem solid orange; */
+    background-color: #f5f5f5;
+    width:100%;
+    margin:0 auto;
+    display: flex;
+    align-items: center;
+}
+
+.chat-window .cont .box-footer .footer-wrapper{
+    width:fit-content;
+    /* border:0.2rem solid green; */
+    margin:0 auto;
+    display: flex;
+    align-items: center;
+}
+.chat-window .cont .box-footer input{
+    padding:1.5rem 2rem;
+    background-color: white;
+    width:50rem;
+    outline: none;
+    border:none;
+    border-radius: 1rem;
+    font-size: 1.8rem;
+}
+.chat-window .cont .box-footer i{
+    font-size:4rem;
+    color:#6F10BA;
+    /* border:0.1rem solid red; */
+    margin:auto 1.5rem;
+    cursor:pointer;
+}
+
+.chat-window .cont .hidden{
+    display: none;
+}
+/* form text inputs */
+
+
+.chat-window .msg .form-input {
+    margin:1rem 0;
+    /* border: 0.1rem solid blue; */
+   
+    padding-left: 1rem;
+}
+.chat-window .msg .form-input input{
+    width:100%;
+    padding:1rem 2rem;
+    outline: none;
+    border: none;
+    border-radius: 0.5rem;
+}
+
+
+/* form radio inputs */
+
+.chat-window .msg .form-header{
+    font-size: 2rem;
+    font-weight: 400;
+    font-family: var(--font-inter);
+    color:#6f10BA;
+    /* border:0.1rem solid red; */
+    padding-left: 1rem;
+}
+
+.chat-window .msg .form-radio .radio{
+    /* border:0.1rem solid red; */
+    /* background-color: rgb(158, 158, 158); */
+    margin:0.2rem 0 1rem 0;
+    padding:0.2rem 0rem 0.2rem 1rem;
+    font-size: 2rem;
+    display:flex;
+    align-items: center;
+}
+.chat-window .msg .form-radio .radio input{
+    width:1.5rem;
+    height:1.5rem;
+}
+.chat-window .msg .form-radio .radio .label-wrapper{
+    /* border:0.1rem solid red; */
+    width:20rem;
+    margin-left:2rem;
+    /* padding:0.5rem 2rem; */
+    border-radius: 2rem;
+    background-color: white;
+}
+.chat-window .msg .form-radio .radio label{
+    display: inline-block;
+    width:20rem;
+    font-size: 1.5rem;
+    cursor: pointer;
+    /* border:0.1rem solid red; */
+    color:#584545;
+    padding:0.5rem 1.5rem;
+    font-family: var(--font-inter);
+}
+.chat-window .msg .icon-wrapper{
+    /* border:0.1rem solid red; */
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+.chat-window .msg .icon-wrapper button{
+    margin:0 auto;
+    padding:0.5rem 3.5rem;
+    border-radius: 1rem;
+    border: none;
+}
+.chat-window .msg .icon-wrapper i{
+    /* border:0.1rem solid red; */
+    font-size: 2.5rem;
+    color:#6F10BA;
+}
+/* responsive*/
+@media screen and (max-width:1200px){
+    .chat-window .cont .box{
+        width:60vw;
+    }
+    .chat-window .cont .box-footer input{
+        width:40rem
+    }
+}
+@media screen and (max-width:800px){
+    .chat-window .cont .box{
+        width:100%;
+    }
+    .chat-window .cont .box-footer input{
+        width:20rem;
+    }
+}
+@media screen and (max-width:500px) {
+    .chat-window .cont .box{
+        width:100%;
+    }
+    .chat-window .cont{
+        /* background-color: blue; */
+        width:100%;
+        display: flex;
+        flex-direction: column;
+        margin:0;
+    }
+    .chat-window .cont .box{
+        /* border:0.2rem solid yellow; */
+        height:90vh;
+    }
+    .chat-window .cont .box-footer{
+        position: absolute;
+        bottom:0;
+    }
+    .chat-window .cont .box-footer input{
+        width:70%;
+    } 
+}
+@media screen and (max-width:400px){
+    /* :root{
+        font-size: 4px;
+    } */
+    
+    
+}

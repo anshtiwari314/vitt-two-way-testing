@@ -1,0 +1,66 @@
+
+.tray{
+    height:5rem;
+    margin:0 auto;
+    width:35%;
+    display: flex;
+    justify-content: space-around;
+    background-color: rgb(94, 94, 94);
+    position:absolute;
+    bottom:2rem;
+    left:35%;
+    border:0.2rem solid rgb(157, 157, 157);
+}
+.tray .time{
+    /* padding:10px 15px; */
+    
+    flex:2;
+    background-color: rgb(145, 145, 145);
+    height:100%;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+.tray .time p{
+    font-weight: bold;
+    font-size: 2rem;
+    color:white;
+}
+.tray .parent{
+    flex:3;
+    height:100%;
+    /* padding:10px 15px; */
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    margin:0 0.1rem;
+    background-color: rgb(145, 145, 145);
+}
+.tray .icons{
+    color:white ;
+    font-size: 2.5rem;
+    cursor: pointer;
+}
+.tray .icons:hover{
+    font-size: 2.8rem;
+    color:rgb(79, 78, 78)
+}
+.tray .chats{
+    
+    background-color: rgb(147, 147, 147);
+}
+.tray .window{
+    background-color: rgb(136, 135, 135);
+}
+
+.tray .close{
+    
+    padding:2rem 1.5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgb(232, 8, 8);
+}
+
+
+
