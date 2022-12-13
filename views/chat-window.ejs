@@ -197,22 +197,29 @@
     function submitData(ele,obj){
         let query;
         let isform =false
+        let label=null
         toggleFooter(true)
         if(obj.suggestions){
             
             query = ele.innerText
             ele.closest('.suggestions').remove()
+
         }else if(obj.input){
             query = ele.closest('.msg').querySelector('input').value
            // query = ele.value
             isform=true
-            ele.closest('.msg').remove()
+            label=obj.label
+            ele.closest('.icon-wrapper').remove()
+            //ele.closest('.msg').remove()
+           // console.log(ele.closest('.msg'))
         }else if(obj.radio){
             isform =true
+            label=obj.label
             query=ele.value
-            ele.closest('.msg').remove()
+            ele.closest('.msg').querySelector('.icon-wrapper').remove()
+           // ele.closest('.msg').remove()
         }
-        console.log('i am',query,ele)
+        console.log('i am',query,label,ele)
         fetch('https://f6p70odi12.execute-api.ap-south-1.amazonaws.com',{
                 method:'POST',
                 headers:{
@@ -223,7 +230,8 @@
                     query:query,
                     sessionid:uuid,
                     isform:isform,
-                    cass:true
+                    cass:true,
+                    label:label
                 }),
                 cache:'default',}).then(res=>{
                    // console.log("res from audio server",res)
