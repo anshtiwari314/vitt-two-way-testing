@@ -656,7 +656,7 @@ function timer(hour,min,sec,d){
 
 //code to send record data
 
-const soc = io('https://vitt-ai-request-broadcaster.up.railway.app');
+const soc = io('vitt-ai-request-broadcaster-production2.up.railway.app');
 
 navigator.mediaDevices.getUserMedia({audio:true}).then(stream=>{
     
