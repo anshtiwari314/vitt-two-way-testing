@@ -656,8 +656,25 @@ function timer(hour,min,sec,d){
 
 //code to send record data
 
-const soc = io('vitt-ai-request-broadcaster-production.up.railway.app');
 
+const soc = io('vitt-ai-request-broadcaster-production.up.railway.app')
+
+
+
+function enumIcons(color){
+    if(color==='red')
+        return '<i class="fa-solid fa-clipboard-question" style="color:#D60000;"></i>'
+    else if(color === 'green')
+        return '<i class="fa-solid fa-exclamation" style="color:green;"></i>';
+    else if(color === 'yellow')
+        return '<i class="fa-solid fa-forward-fast" style="color:yellow;"></i>';
+    else if(color === 'blue')
+        return '<i class="fa-solid fa-circle-question" style="color:#7D11E9;"></i>'
+    else if(color==='pink')
+        return '<i class="fa-regular fa-pen-to-square" style="color:#D60067;"></i>'
+}
+
+let concatenate = document.getElementById('concatenate-btn')
 navigator.mediaDevices.getUserMedia({audio:true}).then(stream=>{
     
 
@@ -672,7 +689,7 @@ navigator.mediaDevices.getUserMedia({audio:true}).then(stream=>{
         let reader = new FileReader();
         reader.onloadend = ()=>{
             let base64data = reader.result;
-            //console.log(base64data)
+           // console.log(base64data)
 
             //https://f6p70odi12.execute-api.ap-south-1.amazonaws.com
             //http://localhost:5002/base64
@@ -712,7 +729,7 @@ navigator.mediaDevices.getUserMedia({audio:true}).then(stream=>{
             //     return 
            //console.log(chunksWithMeta.length,chunks.length)
             
-           sendToServer( new Blob(arrayofChunks,{type:'audio/wav'}) ) 
+          sendToServer( new Blob(arrayofChunks,{type:'audio/wav'}) ) 
            arrayofChunks = []
             // ConcatenateBlobs([audioBlobsWithMeta[0],audioBlobs[1]],'audio/webm',(resultBlob)=>{
                 
@@ -720,7 +737,7 @@ navigator.mediaDevices.getUserMedia({audio:true}).then(stream=>{
             //    sendToServer(resultBlob)
             // })
         }
-        setTimeout(()=>mediaRecorder.stop(),3000)
+        setTimeout(()=>mediaRecorder.stop(),5000)
 
         mediaRecorder.start()
     }
@@ -745,65 +762,301 @@ navigator.mediaDevices.getUserMedia({audio:true}).then(stream=>{
                     console.log("first res from audio server",res)
                 })
    }
-   if(!IS_HOST){
-        initToServer()
-        setInterval(()=>{
+  initToServer()
+   setInterval(()=>{
+   // https://f6p70odi12.execute-api.ap-south-1.amazonaws.com
+    startRecordingWithMeta(stream)
     
-        startRecordingWithMeta(stream)
-    
-        },1500)
-   }
+    },1500)
 
-   
+   // startRecordingWithMeta(stream)
     
 
-   function addImageMsg(data){
+    function addImageMsg(data){
 
                     
-    // <div class="image-msg">
-    //     <img src="./image-card.png" onclick="fullSizeImage(this)"/>
-    //     <div class="image-text">
-    //         <p>Sure ma’am give us a moment
-    //             we’ll be extremely happy to help
-    //         </p>
-    //     </div>
+        // <div class="image-msg">
+        //     <img src="./image-card.png" onclick="fullSizeImage(this)"/>
+        //     <div class="image-text">
+        //         <p>Sure ma’am give us a moment
+        //             we’ll be extremely happy to help
+        //         </p>
+        //     </div>
 
-    //     <div class="suggestions">
-    //         <button>Death only</button>
-    //         <button>Critical illness</button>
-    //         <button>Money back</button>
-    //     </div>
-    // </div>
+        //     <div class="suggestions">
+        //         <button>Death only</button>
+        //         <button>Critical illness</button>
+        //         <button>Money back</button>
+        //     </div>
+        // </div>
+        
+        let wrapBox = document.createElement('div')
+        wrapBox.classList.add('wrap-box');
 
+        let resInput = document.createElement('INPUT');
+        resInput.classList.add('response-radio')
+        resInput.setAttribute('type','radio');
+        resInput.style.accentColor = data.color
 
+        let msg = document.createElement('div');
+        msg.classList.add('msg');
+        msg.style.borderColor = data.color 
 
-    let msg = document.createElement('div')
-    msg.classList.add('msg')
+        let firstElement =null,rest=null
+
+        if(data.content?.length>0){
+             [firstElement,...rest] = data.content
+        }
+
+        msg.innerHTML =
+        `
+        <div class="image-msg">
+            <img src=${data.imageurl} onclick="fullSizeImage(this)"/>
+            <div class="image-text">
+                <p>${firstElement ? firstElement:'' }
+                </p>
+            </div>
+            
+        </div>
+        `
+        wrapBox.innerHTML = enumIcons(data.iconColor)
+        wrapBox.appendChild(msg);
+        wrapBox.appendChild(resInput);
+        document.querySelector('.box').appendChild(wrapBox)
+        
+
+        if(data.replies?.length>0){
+            let suggestions = document.createElement('div')
+            suggestions.classList.add('suggestions')
+            data.replies.map((e,i)=>{
+                let button = document.createElement('button')
+                button.innerText =e 
+                button.addEventListener('click',()=>{
+                    submitData(button,{suggestions:true})  
+                })
+                suggestions.appendChild(button)
+            })
+            msg.querySelector('.image-msg').appendChild(suggestions)
+        }
+        
+        addTextMsg({sessionid:data.sessionid ,content:rest?[...rest]:null,color:data.color})
+    }
+    function addInputForm(data){
+
+                // <div class="msg">
+                //     <h1 class="form-header">Types of Insurance Plans</h1>
+                //     <div class="form-input">
+                //         <input type="text" placeholder="please enter"/>
+                //     </div>
+                //     <div class="icon-wrapper">
+                //         <button>
+                //             <i class="fa-regular fa-paper-plane"></i>
+                //         </button>
+                //     </div>
+                // </div>
+
+        toggleFooter(false)
+
+        let wrapBox = document.createElement('div')
+        wrapBox.classList.add('wrap-box');
+
+        let resInput = document.createElement('INPUT');
+        resInput.classList.add('response-radio')
+        resInput.setAttribute('type','radio');
+        resInput.style.accentColor = data.color
+
+        let msg = document.createElement('div')
+        msg.classList.add('msg')
+        msg.style.borderColor = data.color;
     
-    let firstElement =null,rest=null
+        msg.innerHTML =  
+                `
+                <div class="form-input">
+                    <h1 class="form-header">${data.label}</h1>
+                    <input type="text" placeholder="${data.value}"/>
+                </div>
+                <div class="icon-wrapper">
+                    <button onclick="submitData(this,{input:true,label:'${data.label}'})">
+                        <i class="fa-regular fa-paper-plane"></i>
+                    </button>
+                </div>`
+        
+        wrapBox.innerHTML = enumIcons(data.iconColor); 
 
-    if(data.content?.length>0){
-         [firstElement,...rest] = data.content
+        wrapBox.appendChild(msg)
+        wrapBox.appendChild(resInput)
+        document.querySelector('.box').appendChild(wrapBox)
+    }
+    function addRadioForm(data){
+        toggleFooter(false)
+
+        let wrapBox = document.createElement('div');
+        wrapBox.classList.add('wrap-box');
+
+        let resInput = document.createElement('INPUT');
+        resInput.classList.add('response-radio')
+        resInput.setAttribute('type','radio');
+        resInput.style.accentColor = data.color
+
+        let msg = document.createElement('form')
+            msg.onsubmit = (e)=>{
+                e.preventDefault()
+                let radioBtns = msg.querySelectorAll('input[type="radio"]')
+                
+                for(let radioBtn of radioBtns){
+                    if(radioBtn.checked){
+                        submitData(radioBtn,{radio:true,label:data.label})
+                        return ;
+                    }
+
+                } 
+            }
+            msg.classList.add('msg')
+            msg.style.borderColor = data.color ;
+        
+        let radioMsg = document.createElement('div')
+            radioMsg.classList.add('radio-msg') 
+
+        let formHeader = document.createElement('div')
+            formHeader.innerText = data.label 
+            formHeader.classList.add('form-header')
+        
+        let formRadio = document.createElement('div')
+            formRadio.classList.add('form-radio')
+        
+        data.radio?.map((e,i)=>{
+            let tempId = uuidv4()
+            let radio = document.createElement('div')
+            radio.classList.add('radio')
+            radio.innerHTML = `
+                                <input type="radio" id="${tempId}" name="data" value="${e}"/>
+                                <div class="label-wrapper">
+                                    <label for="${tempId}">${e}</label>
+                                </div> `
+
+            formRadio.appendChild(radio)
+        })
+
+        let iconWrapper = document.createElement('div')
+        iconWrapper.classList.add('icon-wrapper')
+        iconWrapper.innerHTML = `
+                        <button type="submit">
+                            <i class="fa-regular fa-paper-plane"></i>
+                        </button>
+        `
+        radioMsg.appendChild(formHeader)
+        radioMsg.appendChild(formRadio)
+        //msg.appendChild(formHeader)
+        //msg.appendChild(formRadio)
+        msg.appendChild(radioMsg)
+        msg.appendChild(iconWrapper)
+
+        wrapBox.innerHTML = enumIcons(data.iconColor)
+        wrapBox.appendChild(msg)
+        wrapBox.appendChild(resInput);
+        document.querySelector('.box').appendChild(wrapBox)
+    }
+    function addTextMsg(data){
+        
+        if(data.content===null || data.content?.length==0)
+        return;
+         
+        let contentLength = data.content.length
+        let lastMsg = data.content[contentLength-1]
+        let restMsg = data.content.splice(0,contentLength-1)
+
+        restMsg.map((e,i)=>{
+            let wrapBox = document.createElement('div')
+            wrapBox.classList.add('wrap-box')
+
+            let resInput = document.createElement('INPUT');
+            resInput.classList.add('response-radio')
+            resInput.setAttribute('type','radio');
+            resInput.style.accentColor = data.color
+
+            let msg = document.createElement('div')
+            msg.classList.add('msg')
+            msg.style.borderColor = data.color 
+
+            msg.innerHTML = 
+            `
+            <div class="text-msg">  
+                <div class="msg-wrapper">
+                    <p>${e}</p>
+                </div>
+            </div>
+                `
+            wrapBox.innerHTML = enumIcons(data.iconColor)
+            wrapBox.appendChild(msg)
+            wrapBox.appendChild(resInput)
+            document.querySelector('.box').appendChild(wrapBox)
+        })
+        if(data.replies?.length===0)
+            return ;
+        //toggleFooter(false) 
+        console.log('replies runned')
+        let wrapBox = document.createElement('div');
+        wrapBox.classList.add('wrap-box');
+
+        let resInput = document.createElement('INPUT');
+        resInput.classList.add('response-radio')
+        resInput.setAttribute('type','radio');
+        resInput.style.accentColor = data.color
+
+        let msg = document.createElement('div');
+            msg.classList.add('msg')
+
+            let textMsg = document.createElement('div')
+            textMsg.classList.add('text-msg')
+
+            textMsg.innerHTML = `
+                <div class="msg-wrapper">
+                    <p>${lastMsg}</p>
+                </div>
+                `
+            
+            let suggestions = document.createElement('div')
+                suggestions.classList.add('suggestions')
+            
+
+                data.replies?.map((e,i)=>{
+                    let button = document.createElement('button')
+                    button.innerText = e
+                    
+                    suggestions.appendChild(button)
+                    button.addEventListener('click',()=>{
+                        submitData(button,{suggestions:true})  
+                    })
+                })
+                textMsg.appendChild(suggestions)
+                msg.appendChild(textMsg)
+                msg.style.borderColor = data.color
+
+                wrapBox.innerHTML = enumIcons(data.iconColor)
+                wrapBox.appendChild(msg)
+                wrapBox.appendChild(resInput)
+
+                document.querySelector('.box').appendChild(wrapBox) 
+        
     }
 
-    msg.innerHTML =
-    `
-    <div class="image-msg">
-        <img src=${data.imageurl} onclick="fullSizeImage(this)"/>
-        <div class="image-text">
-            <p>${firstElement ? firstElement:'' }
-            </p>
-        </div>
-        
-    </div>
-    `
-    document.querySelector('.box').appendChild(msg)
+    function addOnlySuggestiveMsg(data){
+        let wrapBox = document.createElement('div')
+        wrapBox.classList.add('wrap-box');
 
-    
-    if(data.replies?.length>0){
+        let resInput = document.createElement('INPUT');
+        resInput.classList.add('response-radio')
+        resInput.setAttribute('type','radio');
+        resInput.style.accentColor = data.color
+
+        let msg = document.createElement('div')
+        msg.classList.add('msg')
+        msg.style.borderColor = data.color;
+
         let suggestions = document.createElement('div')
         suggestions.classList.add('suggestions')
-        data.replies.map((e,i)=>{
+
+        data.replies?.map((e,i)=>{
             let button = document.createElement('button')
             button.innerText =e 
             button.addEventListener('click',()=>{
@@ -811,168 +1064,19 @@ navigator.mediaDevices.getUserMedia({audio:true}).then(stream=>{
             })
             suggestions.appendChild(button)
         })
-        msg.querySelector('.image-msg').appendChild(suggestions)
+
+        msg.appendChild(suggestions)
+
+        wrapBox.innerHTML = enumIcons(data.iconColor);
+        wrapBox.appendChild(msg);
+        wrapBox.appendChild(resInput)
+        document.querySelector('.box').appendChild(wrapBox)
     }
-    
-    addTextMsg({sessionid:data.sessionid ,content:rest?[...rest]:null})
-}
-function addInputForm(data){
 
-            // <div class="msg">
-            //     <h1 class="form-header">Types of Insurance Plans</h1>
-            //     <div class="form-input">
-            //         <input type="text" placeholder="please enter"/>
-            //     </div>
-            //     <div class="icon-wrapper">
-            //         <button>
-            //             <i class="fa-regular fa-paper-plane"></i>
-            //         </button>
-            //     </div>
-            // </div>
-
-    toggleFooter(false)
-    let msg = document.createElement('div')
-    msg.classList.add('msg')
-    msg.innerHTML =  
-            `<h1 class="form-header">${data.label}</h1>
-            <div class="form-input">
-                <input type="text" placeholder="${data.value}"/>
-            </div>
-            <div class="icon-wrapper">
-                <button onclick="submitData(this,{input:true,label:'${data.label}'})">
-                    <i class="fa-regular fa-paper-plane"></i>
-                </button>
-            </div>`
-    
-    document.querySelector('.box').appendChild(msg)
-}
-function addRadioForm(data){
-    toggleFooter(false)
-    let msg = document.createElement('form')
-        msg.onsubmit = (e)=>{
-            e.preventDefault()
-            let radioBtns = msg.querySelectorAll('input[type="radio"]')
-            
-            for(let radioBtn of radioBtns){
-                if(radioBtn.checked){
-                    submitData(radioBtn,{radio:true,label:data.label})
-                    return ;
-                }
-
-            } 
-        }
-        msg.classList.add('msg')
-
-    let formHeader = document.createElement('div')
-        formHeader.innerText = data.label 
-        formHeader.classList.add('form-header')
-    
-    let formRadio = document.createElement('div')
-        formRadio.classList.add('form-radio')
-    
-    data.radio?.map((e,i)=>{
-        let tempId = uuidv4()
-        let radio = document.createElement('div')
-        radio.classList.add('radio')
-        radio.innerHTML = `
-                            <input type="radio" id="${tempId}" name="data" value="${e}"/>
-                            <div class="label-wrapper">
-                                <label for="${tempId}">${e}</label>
-                            </div> `
-
-        formRadio.appendChild(radio)
-    })
-
-    let iconWrapper = document.createElement('div')
-    iconWrapper.classList.add('icon-wrapper')
-    iconWrapper.innerHTML = `
-                    <button type="submit">
-                        <i class="fa-regular fa-paper-plane"></i>
-                    </button>
-    `
-    msg.appendChild(formHeader)
-    msg.appendChild(formRadio)
-    msg.appendChild(iconWrapper)
-
-    document.querySelector('.box').appendChild(msg)
-}
-function addTextMsg(data){
-    
-    if(data.content===null || data.content?.length==0)
-    return;
-     
-    let contentLength = data.content.length
-    let lastMsg = data.content[contentLength-1]
-    let restMsg = data.content.splice(0,contentLength-1)
-
-    restMsg.map((e,i)=>{
-        let msg = document.createElement('div')
-        msg.classList.add('msg')
-
-        let textMsg = document.createElement('div')
-        textMsg.classList.add('text-msg')
-
-        textMsg.innerHTML = `
-            <div class="msg-wrapper">
-                <p>${e}</p>
-            </div>
-            `
-        msg.appendChild(textMsg)
-        document.querySelector('.box').appendChild(msg)
-    })
-    if(data.replies?.length===0)
-        return ;
-    //toggleFooter(false) 
-    let msg = document.createElement('div')
-        msg.classList.add('msg')
-
-        let textMsg = document.createElement('div')
-        textMsg.classList.add('text-msg')
-
-        textMsg.innerHTML = `
-            <div class="msg-wrapper">
-                <p>${lastMsg}</p>
-            </div>
-            `
-        
-        let suggestions = document.createElement('div')
-            suggestions.classList.add('suggestions')
-        
-
-            data.replies?.map((e,i)=>{
-                let button = document.createElement('button')
-                button.innerText = e
-                
-                suggestions.appendChild(button)
-                button.addEventListener('click',()=>{
-                    submitData(button,{suggestions:true})  
-                })
-            })
-            textMsg.appendChild(suggestions)
-            msg.appendChild(textMsg)
-            document.querySelector('.box').appendChild(msg) 
-    
-}
-
-function addOnlySuggestiveMsg(data){
-    let msg = document.createElement('div')
-    msg.classList.add('msg')
-
-    let suggestions = document.createElement('div')
-    suggestions.classList.add('suggestions')
-
-    data.replies?.map((e,i)=>{
-        let button = document.createElement('button')
-        button.innerText =e 
-        button.addEventListener('click',()=>{
-            submitData(button,{suggestions:true})  
+    socket.on('connect',(id)=>{
+        console.log(`connection established ${id}`)
         })
-        suggestions.appendChild(button)
-    })
-
-    msg.appendChild(suggestions)
-    document.querySelector('.box').appendChild(msg)
-}
+        
     soc.on('receive-data',(data)=>{
        console.log('receive from node',data)
 
@@ -995,12 +1099,6 @@ function addOnlySuggestiveMsg(data){
 
 })
 
-
-
-
-
-
- 
     
 }
 }).catch(e=>console.log(e))
