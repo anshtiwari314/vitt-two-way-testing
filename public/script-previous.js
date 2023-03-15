@@ -101,11 +101,17 @@ let commentIcon = document.getElementById('commentIcon')
 let chatBtn = document.getElementById('chatBtn')
 let usrBtn = document.getElementById('usrBtn')
 
+let screenShareBtn = document.getElementById('screen-sharing');
+
+let peerArr = []
+let peersObj = {}
+let myScreenSharingStream = null; 
+let currentPeer = null;
 let sideWindowStatus = true
 let myStream
-
+let screenSharing =false
 const peer = new Peer(myId)
-
+const peer2 = new Peer(myId)
 
 vidIcon.addEventListener('click',()=>{
 
@@ -251,6 +257,48 @@ commentIcon.addEventListener('click',()=>{
 })
 
 
+
+screenShareBtn.addEventListener('click',()=>{
+   
+    if(screenSharing===true){
+        screenSharing=false
+        screenShareBtn.style.color = 'white'
+        console.log('screen sharing',screenSharing)
+
+        let videoTrack = myStream.getVideoTracks()[0]
+
+        let senders = currentPeer.peerConnection.getSenders().find((s)=>{
+            return s.track.kind === videoTrack.kind
+        })
+        console.log('senders',senders)
+        senders.replaceTrack(videoTrack)
+        
+    }
+
+    if(screenSharing ===false){
+        console.log('screen sharing',screenSharing)
+        navigator.mediaDevices.getDisplayMedia({video:true})
+    .then((stream)=>{
+        console.log(stream);
+       
+        screenSharing = true;
+        console.log('after screen share',screenSharing)
+        screenShareBtn.style.color = 'red'
+
+        let videoTrack = stream.getVideoTracks()[0]
+        
+            let senders = currentPeer.peerConnection.getSenders().find((s)=>{
+                return s.track.kind === videoTrack.kind
+            })
+            console.log('senders',senders)
+            senders.replaceTrack(videoTrack)
+        
+            
+    })
+    }
+
+ })
+ 
 function openSideWindow(){
     sideChat[0].style.display = "block"
     layout[0].style.width = "75vw"
@@ -410,16 +458,31 @@ function zoomOnClick(id){
 
 //video setup
 
-let peerArr = []
-let peersObj = {}
 
+let displayMediaOptions = {
+    video:true,
+}
+
+function startScreenCapture(){
+    return navigator.mediaDevices.getDisplayMedia(displayMediaOptions)
+    .catch((err)=>{console.log(err); return null})
+}
+function stopScreenCapture(evt) {
+    let tracks = vid.srcObject.getTracks();
+  
+    tracks.forEach((track) => track.stop());
+    videoElem.srcObject = null;
+  }
 //console.log(navigator.mediaDevices)
+
+
 
 navigator.mediaDevices.getUserMedia({
     video:true,
     audio:true
 }).then(stream=>{
     myStream=stream
+    //streamToPass = stream;
 
     let myVideo = document.createElement('video')
     myVideo.muted = true 
@@ -431,10 +494,11 @@ navigator.mediaDevices.getUserMedia({
     peer.on('call',call=>{
         call.answer(stream)
         console.log('call.peer',call.peer)
-        peersObj[call.peer] = call 
+        peersObj[call.peer] = call
+        currentPeer = call
         
         call.on('stream',(oldUserVideoStream)=>{
-            
+           // console.log('i am stream',streamToPass)
             if(!peerArr.includes(call.peer)){
                 peerArr.push(call.peer)
 
@@ -445,6 +509,8 @@ navigator.mediaDevices.getUserMedia({
             }
         })
         
+        
+
         call.on('close',()=>{
             console.log('user leaved ')
            removeVideo(call.peer)
@@ -452,7 +518,11 @@ navigator.mediaDevices.getUserMedia({
         })
 
     })
-
+    // peer2.on('call',(call)=>{
+    //     call.on('stream',otherPersonScreenStream=>{
+    //         console.log('sharing stream is',otherPersonScreenStream)
+    //     })
+    // })
     peer.on('connection',(conn)=>{
 
         conn.on('open', function() {
@@ -475,19 +545,13 @@ navigator.mediaDevices.getUserMedia({
 
      })
 
-     
-
-        
-
-     
-
-     
-
     socket.on('user-connected',(newUserId)=>{
         console.log('new user ',newUserId)
-        connectToNewUser(newUserId,stream)
+
+        connectToNewUser(newUserId,myStream)
         
-    })
+})
+
     socket.on('user-disconnected',(userId)=>{
         console.log('disconnect user id',userId)
         if(peersObj[userId]){
@@ -499,6 +563,27 @@ navigator.mediaDevices.getUserMedia({
 peer.on('open',myId=>{
     socket.emit('join-room',ROOM_ID,myId,myName)
 }) 
+
+
+function shareScreenToOthers(stream){
+    // let keys = Object.keys(peersObj)
+    // keys.forEach((peerId)=>{
+    //     //let call = peer.call(id,stream)
+    //     call = peersObj[peerId]
+    //     call.on('data-stream',otherPersonScreenStream=>{
+    //         console.log('screen sharing is',otherPersonScreenStream)
+    //     })
+    // })
+
+
+    peerArr.forEach((peer)=>{
+        let call = peer2.call(peer,stream)
+    })
+    
+}
+
+
+
 function changeLogoName(name,id){
     //console.log(document.getElementById(id).querySelector('p'))
    document.getElementById(id).querySelector('p').innerText = name.toUpperCase().substring(0,2);
@@ -536,10 +621,13 @@ function connectToNewUser(newUserId,stream){
     //i m calling
     const call = peer.call(newUserId,stream)
     let tempObj
+    currentPeer =call
     // i am receiving
-    call.on('stream',userVideoStream =>{
+    call.on('stream',(userVideoStream) =>{
+        //console.log('i am stream',streamToPass)
         if(!peerArr.includes(call.peer)){
             peerArr.push(call.peer)
+            
             let video = document.createElement('video')
             addVideoStream(video,call.peer,userVideoStream,undefined,()=>{
                 changeLogoName(tempObj.name,tempObj.id)
@@ -548,7 +636,7 @@ function connectToNewUser(newUserId,stream){
     })
 
     call.on('close',()=>{
-        console.log('user leaved ')
+       console.log('user leaved ')
        removeVideo(newUserId)
        removeParticipants(newUserId)
     })
@@ -565,8 +653,7 @@ function connectToNewUser(newUserId,stream){
                 //console.log('2nd receiver',obj)
                 tempObj=obj
 
-                addParticipants(obj.name,obj.host,newUserId,obj.color)
-                
+                addParticipants(obj.name,obj.host,newUserId,obj.color)                
             });
 
             // Send messages
@@ -762,12 +849,7 @@ navigator.mediaDevices.getUserMedia({audio:true}).then(stream=>{
                     console.log("first res from audio server",res)
                 })
    }
-  initToServer()
-   setInterval(()=>{
-   // https://f6p70odi12.execute-api.ap-south-1.amazonaws.com
-    startRecordingWithMeta(stream)
-    
-    },1500)
+   
 
    // startRecordingWithMeta(stream)
     
@@ -1076,7 +1158,15 @@ navigator.mediaDevices.getUserMedia({audio:true}).then(stream=>{
     socket.on('connect',(id)=>{
         console.log(`connection established ${id}`)
         })
-        
+    soc.on('connect',(id)=>{
+        initToServer()
+        setInterval(()=>{
+        // https://f6p70odi12.execute-api.ap-south-1.amazonaws.com
+            // if(!IS_HOST)
+            startRecordingWithMeta(stream)
+        },1500)
+    })
+
     soc.on('receive-data',(data)=>{
        console.log('receive from node',data)
 
