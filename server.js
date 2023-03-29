@@ -52,7 +52,27 @@ setInterval(()=>removeExpiredLinks(),1000*60*60)
 
 app.get('/',(req,res)=>{
    // res.redirect(`/${uuid4()}`)
-   res.render(`Home`)
+   console.log(req.query.room_id)
+   if(req.query.room_id){
+        res.render(`index`)
+   }else{
+    res.render(`Home`)
+   }
+
+   //res.render('index',{roomId:req.params.room})
+   
+})
+
+// temp purpose 
+app.post('/client-mob',(req,res)=>{
+    console.log("i am req",req.body)
+    let client_mob = 
+    {
+    "mobileno ": "8708213235", 
+    "custid": "12345", 
+    "newuser": false
+}
+   res.json(client_mob).status(200)
 })
 
 app.get('/leave',(req,res)=>{
@@ -101,6 +121,9 @@ app.post('/checkMultipleRoomId',(req,res)=>{
 
 app.get('/:room',(req,res)=>{
    // console.log(req.params.room)
+    //console.log(`room triggered`)
+
+    //console.log(`i am triggred`,req.query.room_id,req.query.cust_id)
     res.render('index',{roomId:req.params.room})
 })
 

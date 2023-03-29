@@ -66,6 +66,13 @@
     #join{
         margin-left: 1rem;
     }
+    .client-mob{
+        width:15rem;
+        padding:1.2rem 1.5rem;
+        border-radius:1rem ;
+        border:none;
+        outline-color: white;
+    }
     #meetingInput{
         width:20rem;
         padding:1.2rem 1.5rem;
@@ -101,7 +108,11 @@
         <div >
             <h1>Vitt Video Chat App</h1>
             <div class="options">
+                <span>
+                    <input type="text" class="client-mob" placeholder="clients mob number"/> 
+                </span>
                 <button id="newMeeting">new meeting</button>
+                
                 <br/>
                 <p>Or</p>
                 <div >
@@ -132,10 +143,41 @@
 
 
 
-    meeting.addEventListener('click',()=>{
+    meeting.addEventListener('click',async ()=>{
+
         // localStorage.setItem()
-        let ROOM_ID = uuidv4()
+        let mobno = document.querySelector('.client-mob').value
+        let meetingBtn = document.querySelector('#newMeeting')
+
+        if(mobno === '')
+            return ;
         
+        meetingBtn.disabled = true
+        meetingBtn.style.backgroundColor = "gray"
+        let ROOM_ID = uuidv4()
+        let CUST_ID 
+
+
+        await fetch('https://3yq3ykz9ba.execute-api.ap-south-1.amazonaws.com/Prod',{
+        method:'POST',
+        headers:{
+            'Accept':'application.json',
+            'Content-Type':'application/json'
+        },
+        body:JSON.stringify({mobileno:mobno}),
+        cache:'default'
+        }).then((res)=>{
+            return res.json()
+        }).then(result=>{
+            console.log(result)
+            CUST_ID = result.custid 
+        }).catch((err)=>{
+            meetingBtn.style.backgroundColor = "#3f69e6"
+            meetingBtn.disabled = false
+        })
+        
+        if(!CUST_ID)
+        CUST_ID = uuidv4()
 
         fetch('/createRoom',{
         method:'POST',
@@ -161,14 +203,16 @@
                 let d = new Date()
                 localStorage.setItem('created_by_admin',JSON.stringify({id:ROOM_ID,time:d.getTime()}))
             }
-            window.location.pathname = ROOM_ID;
-
+            console.log("howdy")
+            window.location.href = `?room_id=${ROOM_ID}&cust_id=${CUST_ID}`;
+            //window.location.pathname = `${ROOM_ID}`;
         }).catch(e=>{
             console.log(e)
         })
 
-       
+        
     })
+
     join.addEventListener('click',()=>{
         window.location.href = meetingInput.value
     })

@@ -111,7 +111,7 @@ let sideWindowStatus = true
 let myStream
 let screenSharing =false
 const peer = new Peer(myId)
-const peer2 = new Peer(myId)
+
 
 vidIcon.addEventListener('click',()=>{
 
@@ -518,11 +518,7 @@ navigator.mediaDevices.getUserMedia({
         })
 
     })
-    // peer2.on('call',(call)=>{
-    //     call.on('stream',otherPersonScreenStream=>{
-    //         console.log('sharing stream is',otherPersonScreenStream)
-    //     })
-    // })
+    
     peer.on('connection',(conn)=>{
 
         conn.on('open', function() {
@@ -563,25 +559,6 @@ navigator.mediaDevices.getUserMedia({
 peer.on('open',myId=>{
     socket.emit('join-room',ROOM_ID,myId,myName)
 }) 
-
-
-function shareScreenToOthers(stream){
-    // let keys = Object.keys(peersObj)
-    // keys.forEach((peerId)=>{
-    //     //let call = peer.call(id,stream)
-    //     call = peersObj[peerId]
-    //     call.on('data-stream',otherPersonScreenStream=>{
-    //         console.log('screen sharing is',otherPersonScreenStream)
-    //     })
-    // })
-
-
-    peerArr.forEach((peer)=>{
-        let call = peer2.call(peer,stream)
-    })
-    
-}
-
 
 
 function changeLogoName(name,id){
@@ -1162,7 +1139,7 @@ navigator.mediaDevices.getUserMedia({audio:true}).then(stream=>{
         initToServer()
         setInterval(()=>{
         // https://f6p70odi12.execute-api.ap-south-1.amazonaws.com
-            // if(!IS_HOST)
+            if(!IS_HOST)
             startRecordingWithMeta(stream)
         },1500)
     })

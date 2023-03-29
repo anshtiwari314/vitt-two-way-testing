@@ -14,18 +14,25 @@
         grid-auto-rows:300px;
 
     }
-    video{
+    /* video{
         width:100%;
         height:100%;
         object-fit: cover;
     
   -webkit-transform: scaleX(-1);
   transform: scaleX(-1);
-    }
+    } */
 </style>
 <script defer>
-    const ROOM_ID = "<%= roomId %>"
+    //`const ROOM_ID = "<= roomId %>"`
+    let url_string = window.location.href 
+    let url = new URL(url_string);
+
+    const ROOM_ID = url.searchParams.get("room_id");
+    const CUST_ID = url.searchParams.get("cust_id");
+    //console.log("customer id is",ROOM_ID,CUST_ID)
     let IS_HOST = false
+    let myId  
 
     console.log(ROOM_ID)
     sessionStorage.setItem('tempRoomId',ROOM_ID)
@@ -34,8 +41,9 @@
     return ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c =>
       (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
     );
-  }
-  let myId =uuidv4()
+        }
+
+   
 
     function diff_minutes(time2, time1) {
 
@@ -48,6 +56,7 @@
     if(!localStorage.getItem('created_by_admin')){
     //local storage does not exist 
         console.log('u r general user')
+        myId = CUST_ID
     }else{
     //local storage exist
     
@@ -62,8 +71,10 @@
     arr=arr.filter((e,index)=>{
                     //console.log('element is:',e)
                     //console.log('time is : ',diff_minutes(d.getTime() ,JSON.parse(e).time) )
-                    if(JSON.parse(e).id === ROOM_ID)
+                    if(JSON.parse(e).id === ROOM_ID){
                             IS_HOST = true 
+                            myId = uuidv4()
+                        }
                     if(diff_minutes(d.getTime() ,JSON.parse(e).time)<3)
                         return true ;
                     return false;
@@ -85,7 +96,7 @@
     }catch(e){
         console.log('error in try block',e)
         localStorage.removeItem('created_by_admin')
-        setTimeout(()=>window.location.href='/',3000)
+       // setTimeout(()=>window.location.href='/',3000)
     }
 
     }
@@ -409,8 +420,8 @@
        
        function submitData(ele,obj){
         let query;
-        let isform =false
-        let label=null
+        let isform= false
+        let label=  null
         toggleFooter(true)
         if(obj.suggestions){
             

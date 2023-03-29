@@ -25,8 +25,8 @@
 .layout .user-wrapper .user video{
     height:20rem;
     border-radius: 0.1rem;
-    -webkit-transform: scaleX(-1);
-    transform: scaleX(-1);
+    /* -webkit-transform: scaleX(-1); */
+    /* transform: scaleX(-1); */
 }
 
 .layout .user-wrapper .user .name{
