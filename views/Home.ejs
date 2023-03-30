@@ -146,7 +146,8 @@
     meeting.addEventListener('click',async ()=>{
 
         // localStorage.setItem()
-        let mobno = document.querySelector('.client-mob').value
+        let mobnoInput = document.querySelector('.client-mob')
+        let mobno = mobnoInput.value
         let meetingBtn = document.querySelector('#newMeeting')
 
         if(mobno === '')

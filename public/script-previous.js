@@ -103,6 +103,7 @@ let usrBtn = document.getElementById('usrBtn')
 
 let screenShareBtn = document.getElementById('screen-sharing');
 
+let HOST_ID = ''
 let peerArr = []
 let peersObj = {}
 let myScreenSharingStream = null; 
@@ -526,7 +527,9 @@ navigator.mediaDevices.getUserMedia({
             conn.on('data', (obj)=> {
                 console.log('1st receiver',obj,conn.peer)
                 tempObj=obj
-              
+              if(obj.host ===true)
+              HOST_ID = obj.id
+
               addParticipants(obj.name,obj.host,conn.peer,obj.color)
               
             });
@@ -629,7 +632,8 @@ function connectToNewUser(newUserId,stream){
             conn.on('data', (obj)=> {
                 //console.log('2nd receiver',obj)
                 tempObj=obj
-
+                if(obj.host ===true)
+                HOST_ID = obj.id
                 addParticipants(obj.name,obj.host,newUserId,obj.color)                
             });
 
@@ -767,6 +771,8 @@ navigator.mediaDevices.getUserMedia({audio:true}).then(stream=>{
                 body:JSON.stringify({
                     audiomessage:base64data.split(',')[1],
                     uid:myId,
+                    adminid:HOST_ID,
+                    roomid:ROOM_ID
                    // isadmin:IS_HOST
                 }),
                 cache:'default',}).then(res=>{
@@ -818,6 +824,8 @@ navigator.mediaDevices.getUserMedia({audio:true}).then(stream=>{
                 },
                 body:JSON.stringify({
                     uid:myId,
+                    adminid:HOST_ID,
+                    roomId:ROOM_ID,
                     init: true,
                     cass:true
                    // isadmin:IS_HOST
