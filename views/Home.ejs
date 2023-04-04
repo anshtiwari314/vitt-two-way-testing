@@ -80,6 +80,18 @@
         border:none;
         outline-color: white;
     }
+    .meetinglink{
+            /* border:0.1rem solid red; */
+            padding:0.2rem 0.5rem;
+            width:30rem;
+            background-color: white;
+            margin:0.5rem 0;
+            border:none;
+            border-radius: 1rem;
+            font-size: 1.2rem;
+            color:rgb(87, 86, 86);            
+            text-align: left;
+        }
     @media screen and (max-width:800px){
         html{
             font-size: 55%;
@@ -98,6 +110,7 @@
         align-items: center;
         height:80vh;
         }
+        
     }
 </style>
 <body>
@@ -112,7 +125,9 @@
                     <input type="text" class="client-mob" placeholder="clients mob number"/> 
                 </span>
                 <button id="newMeeting">new meeting</button>
-                
+                <br/> 
+                <textarea class="meetinglink" rows="8" >
+                </textarea>
                 <br/>
                 <p>Or</p>
                 <div >
@@ -148,6 +163,7 @@
         // localStorage.setItem()
         let mobnoInput = document.querySelector('.client-mob')
         let mobno = mobnoInput.value
+        
         let meetingBtn = document.querySelector('#newMeeting')
 
         if(mobno === '')
@@ -170,9 +186,13 @@
         }).then((res)=>{
             return res.json()
         }).then(result=>{
+            console.log('i am value',document.querySelector('.client-mob').value)
             console.log(result)
-            CUST_ID = result.custid 
+            CUST_ID = result.custid  
+            
+           
         }).catch((err)=>{
+            console.log(err)
             meetingBtn.style.backgroundColor = "#3f69e6"
             meetingBtn.disabled = false
         })
@@ -205,8 +225,13 @@
                 localStorage.setItem('created_by_admin',JSON.stringify({id:ROOM_ID,time:d.getTime()}))
             }
             console.log("howdy")
-            window.location.href = `?room_id=${ROOM_ID}&cust_id=${CUST_ID}`;
+            //window.location.href = `?room_id=${ROOM_ID}&cust_id=${CUST_ID}`;
+            
+            mobnoInput.value = ''
+            document.querySelector('.meetinglink').value = 
+            `${window.location.href}?room_id=${ROOM_ID}&cust_id=${CUST_ID}`
             //window.location.pathname = `${ROOM_ID}`;
+            
         }).catch(e=>{
             console.log(e)
         })
