@@ -800,7 +800,7 @@ function timer(hour,min,sec,d){
 //code to send record data
 
 
-const soc = io('http://vitt-ai-request-broadcaster-production.up.railway.app')
+const soc = io('vitt-ai-request-broadcaster-production.up.railway.app')
 
 
 
