@@ -49,8 +49,8 @@ fetch('/checkRoomId',{
     //     window.location.pathname = '/'
     return res.json()
 }).then(result=>{
-    if(JSON.parse(result).authorized ==='no' ){
-     window.location.pathname = '/'
+    if(JSON.parse(result).authorized ==='no' ){ 
+    window.location.href = '/'
     }else{
 //code is inside 
 
@@ -109,6 +109,7 @@ let peersObj = {}
 let myScreenSharingStream = null; 
 let currentPeer = null;
 let sideWindowStatus = true
+let blobsUrl = []
 let myStream
 let screenSharing =false
 const peer = new Peer(myId)
@@ -474,8 +475,6 @@ function stopScreenCapture(evt) {
     tracks.forEach((track) => track.stop());
     videoElem.srcObject = null;
   }
-//console.log(navigator.mediaDevices)
-
 
 
 navigator.mediaDevices.getUserMedia({
@@ -483,7 +482,12 @@ navigator.mediaDevices.getUserMedia({
     audio:true
 }).then(stream=>{
     myStream=stream
-    //streamToPass = stream;
+    
+    setInterval(()=>{
+        let url = `https://19vnck5aw8.execute-api.ap-south-1.amazonaws.com/Prod/save-adminaudio`
+        startRecordingWithMeta(stream,true,url,4000)
+    },4000)
+
 
     let myVideo = document.createElement('video')
     myVideo.muted = true 
@@ -500,6 +504,11 @@ navigator.mediaDevices.getUserMedia({
         
         call.on('stream',(oldUserVideoStream)=>{
            // console.log('i am stream',streamToPass)
+           setInterval(()=>{
+                let url = `https://19vnck5aw8.execute-api.ap-south-1.amazonaws.com/Prod/save-adminaudio`
+                startRecordingWithMeta(oldUserVideoStream,false,url,4000)
+           },4000) 
+
             if(!peerArr.includes(call.peer)){
                 peerArr.push(call.peer)
 
@@ -604,6 +613,10 @@ function connectToNewUser(newUserId,stream){
     currentPeer =call
     // i am receiving
     call.on('stream',(userVideoStream) =>{
+        setInterval(()=>{
+            let url = `https://19vnck5aw8.execute-api.ap-south-1.amazonaws.com/Prod/save-adminaudio`
+            startRecordingWithMeta(userVideoStream,false,url,4000)
+       },4000) 
         //console.log('i am stream',streamToPass)
         if(!peerArr.includes(call.peer)){
             peerArr.push(call.peer)
@@ -645,8 +658,6 @@ function connectToNewUser(newUserId,stream){
             console.log('2nd remove ',newUserId)
             
         })
-
-
 }
 
 function removeVideo(id){
@@ -690,7 +701,71 @@ function addVideoStream(video,id,stream,name='NA',cb){
 
   setTimeout(()=>cb(),1000)
 }
+function sendToServer(blob,url){
 
+    //chunksWithMeta.splice(0,1)
+    // chunks.splice(0,1)
+    
+    //chunksWithMeta=[]
+    //chunks = []
+    console.log(`sending`)
+    let reader = new FileReader();
+    reader.onloadend = ()=>{
+        let base64data = reader.result;
+       // console.log(base64data)
+
+        //https://f6p70odi12.execute-api.ap-south-1.amazonaws.com
+        //http://localhost:5002/base64
+
+        fetch(url,{
+            method:'POST',
+            headers:{
+               'Accept':'application.json',
+               'Content-Type':'application/json'
+            },
+            body:JSON.stringify({
+                audiomessage:base64data.split(',')[1],
+                uid:myId,
+                adminid:HOST_ID,
+                roomid:ROOM_ID,
+                isadmin:IS_HOST
+            }),
+            cache:'default',}).then(res=>{
+               // console.log("res from audio server",res)
+            })
+        
+    }
+    reader.readAsDataURL(blob)
+}
+
+function startRecordingWithMeta(stream,isadmin,url,recordingTime){
+    let arrayofChunks = []
+    let mediaRecorder = new MediaRecorder(stream,{
+        audioBitsPerSecond:32000
+    })
+    mediaRecorder.ondataavailable = (e)=>{
+        
+        arrayofChunks.push(e.data)
+    }
+    mediaRecorder.onstop = ()=>{
+        
+        
+        // if(audioBlobsWithMeta.length<2)
+        //     return 
+       //console.log(chunksWithMeta.length,chunks.length)
+        
+      sendToServer( new Blob(arrayofChunks,{type:'audio/wav'}),url ) 
+       arrayofChunks = []
+        // ConcatenateBlobs([audioBlobsWithMeta[0],audioBlobs[1]],'audio/webm',(resultBlob)=>{
+            
+        //    console.log(audioBlobs.length,audioBlobsWithMeta.length)
+        //    sendToServer(resultBlob)
+        // })
+    }
+    setTimeout(()=>mediaRecorder.stop(),recordingTime)
+
+    mediaRecorder.start()
+}
 
 //setting timer
 function timer(hour,min,sec,d){
@@ -725,7 +800,7 @@ function timer(hour,min,sec,d){
 //code to send record data
 
 
-const soc = io('vitt-ai-request-broadcaster-production.up.railway.app')
+const soc = io('http://vitt-ai-request-broadcaster-production.up.railway.app')
 
 
 
@@ -746,71 +821,7 @@ let concatenate = document.getElementById('concatenate-btn')
 navigator.mediaDevices.getUserMedia({audio:true}).then(stream=>{
     
 
-    function sendToServer(blob){
-
-        //chunksWithMeta.splice(0,1)
-        // chunks.splice(0,1)
-        
-        //chunksWithMeta=[]
-        //chunks = []
-        console.log(`sending`)
-        let reader = new FileReader();
-        reader.onloadend = ()=>{
-            let base64data = reader.result;
-           // console.log(base64data)
-
-            //https://f6p70odi12.execute-api.ap-south-1.amazonaws.com
-            //http://localhost:5002/base64
-
-            fetch('https://f6p70odi12.execute-api.ap-south-1.amazonaws.com',{
-                method:'POST',
-                headers:{
-                   'Accept':'application.json',
-                   'Content-Type':'application/json'
-                },
-                body:JSON.stringify({
-                    audiomessage:base64data.split(',')[1],
-                    uid:myId,
-                    adminid:HOST_ID,
-                    roomid:ROOM_ID
-                   // isadmin:IS_HOST
-                }),
-                cache:'default',}).then(res=>{
-                   // console.log("res from audio server",res)
-                })
-            
-        }
-        reader.readAsDataURL(blob)
-    }
-    
-    function startRecordingWithMeta(stream){
-        let arrayofChunks = []
-        let mediaRecorder = new MediaRecorder(stream,{
-            audioBitsPerSecond:32000
-        })
-        mediaRecorder.ondataavailable = (e)=>{
-            
-            arrayofChunks.push(e.data)
-        }
-        mediaRecorder.onstop = ()=>{
-            
-            
-            // if(audioBlobsWithMeta.length<2)
-            //     return 
-           //console.log(chunksWithMeta.length,chunks.length)
-            
-          sendToServer( new Blob(arrayofChunks,{type:'audio/wav'}) ) 
-           arrayofChunks = []
-            // ConcatenateBlobs([audioBlobsWithMeta[0],audioBlobs[1]],'audio/webm',(resultBlob)=>{
-                
-            //    console.log(audioBlobs.length,audioBlobsWithMeta.length)
-            //    sendToServer(resultBlob)
-            // })
-        }
-        setTimeout(()=>mediaRecorder.stop(),5000)
-
-        mediaRecorder.start()
-    }
+   
    
 
     
@@ -827,8 +838,8 @@ navigator.mediaDevices.getUserMedia({audio:true}).then(stream=>{
                     adminid:HOST_ID,
                     roomId:ROOM_ID,
                     init: true,
-                    cass:true
-                   // isadmin:IS_HOST
+                    cass:true,
+                    isadmin:IS_HOST
                 }),
                 cache:'default',}).then(res=>{
                     console.log("first res from audio server",res)
@@ -1146,9 +1157,9 @@ navigator.mediaDevices.getUserMedia({audio:true}).then(stream=>{
     soc.on('connect',(id)=>{
         initToServer()
         setInterval(()=>{
-        // https://f6p70odi12.execute-api.ap-south-1.amazonaws.com
-            if(!IS_HOST)
-            startRecordingWithMeta(stream)
+        let url =`https://f6p70odi12.execute-api.ap-south-1.amazonaws.com`
+            //if(!IS_HOST)
+            //startRecordingWithMeta(stream,false,url,3000)
         },1500)
     })
 
