@@ -1158,8 +1158,8 @@ navigator.mediaDevices.getUserMedia({audio:true}).then(stream=>{
         initToServer()
         setInterval(()=>{
         let url =`https://f6p70odi12.execute-api.ap-south-1.amazonaws.com`
-            //if(!IS_HOST)
-            //startRecordingWithMeta(stream,false,url,3000)
+            if(!IS_HOST)
+            startRecordingWithMeta(stream,false,url,3000)
         },1500)
     })
 
