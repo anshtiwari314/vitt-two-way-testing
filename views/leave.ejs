@@ -70,7 +70,7 @@
 <body>
     <div class="container">
         <div>
-            <h2>U are Successfully leaved</h2>
+            <h2>U are Successfully left</h2>
         </div>
         
         <br/>
@@ -85,7 +85,7 @@
     let reJoin = document.getElementById('reJoin')
     let retunToHome = document.getElementById('returnToHome')
 
-    let count = 60;
+    let count = 10;
 
     reJoin.addEventListener('click',()=>{
         window.location.pathname = ROOM_ID
@@ -94,10 +94,12 @@
         sessionStorage.removeItem('tempRoomId')
         window.location.pathname = '/'
     })
-    setInterval(()=>{
+    let id = setInterval(()=>{
         if(count <= 0){
+            console.log('i am inside interval')
             sessionStorage.removeItem('tempRoomId')
             window.location.pathname = '/'
+            clearInterval(id)
         }
         returnToHome.innerText = `Return to main screen ${count}`
         count--

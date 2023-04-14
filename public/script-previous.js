@@ -112,7 +112,26 @@ let sideWindowStatus = true
 let blobsUrl = []
 let myStream
 let screenSharing =false
-const peer = new Peer(myId)
+let IS_SCREEN_ZOOM = false;
+
+let MY_SOCKET_ID 
+let FIRST_TIME_CONNECT = true; 
+
+let url1 = `https://19vnck5aw8.execute-api.ap-south-1.amazonaws.com/Prod/save-adminaudio`
+let url2 = 'https://f6p70odi12.execute-api.ap-south-1.amazonaws.com'
+
+
+let options1 ={
+    host: "vitt-peerjs-server-production.up.railway.app",
+    port: 443,
+    path: "/myapp"
+}
+let options2 = {
+    host: "localhost",
+    port: 5009,
+    path: "/myapp"
+}
+const peer = new Peer(myId,options1)
 
 
 vidIcon.addEventListener('click',()=>{
@@ -279,7 +298,13 @@ screenShareBtn.addEventListener('click',()=>{
 
     if(screenSharing ===false){
         console.log('screen sharing',screenSharing)
-        navigator.mediaDevices.getDisplayMedia({video:true})
+        navigator.mediaDevices.getDisplayMedia({
+            video:{
+                frameRate:{
+                    ideal:60
+                }
+            }
+        })
     .then((stream)=>{
         console.log(stream);
        
@@ -331,6 +356,7 @@ socket.on('user-camera-toggle',(userId,state)=>{
     
     
 })
+
 function addNewMessage(msg,isAnotherUser,userName){
     let scrollable = document.getElementsByClassName('scrollable')[0]
 
@@ -407,7 +433,7 @@ function zoomOnClick(id){
     // let clickedElement = document.getElementById(id)
     // clickedElement.height = '90vh'
     // clickedElement.width = '75vw'
-
+    
     let layout= document.getElementsByClassName('layout')[0]
     
 
@@ -419,6 +445,7 @@ function zoomOnClick(id){
     //un zoom
     
     if(document.getElementById(id).getAttribute('zoom') ==='true'){
+        
         childrenArr.forEach(e => {
             
             if(e.id === id){
@@ -430,8 +457,9 @@ function zoomOnClick(id){
                 e.style.display = 'flex'
             }
         });
-
+        IS_SCREEN_ZOOM = true;
     }else{
+        
             //zoom
         childrenArr.forEach(e => {
             if(e.id === id){
@@ -445,6 +473,7 @@ function zoomOnClick(id){
                 e.style.display = 'none'
             }
         });
+        IS_SCREEN_ZOOM = true;
     }
 
     
@@ -477,14 +506,38 @@ function stopScreenCapture(evt) {
   }
 
 
+
+peer.on('open',myId=>{
+    //console.log(`peer open`,MY_SOCKET_ID)
+    setTimeout(()=>{
+        console.log(`peer open after 2s`,MY_SOCKET_ID)
+    //    socket.emit('join-room',ROOM_ID,myId,MY_SOCKET_ID)
+        socket.emit('join-room',ROOM_ID,myId)
+    },2000)
+      
+})
+
+peer.on('disconnected',()=>{
+    console.log(`disconnected from peer network`)
+})    
+ 
+  
+
 navigator.mediaDevices.getUserMedia({
-    video:true,
+    video:{
+        frameRate:{
+            ideal:60,
+            min:10
+        }
+    },
     audio:true
 }).then(stream=>{
     myStream=stream
     
     setInterval(()=>{
-        let url = `https://19vnck5aw8.execute-api.ap-south-1.amazonaws.com/Prod/save-adminaudio`
+        // url1 
+        let url = url1 ; 
+        if(url)
         startRecordingWithMeta(stream,true,url,4000)
     },4000)
 
@@ -494,6 +547,7 @@ navigator.mediaDevices.getUserMedia({
     addVideoStream(myVideo,myId,stream,myName,()=>{})
     let tempObj
 
+    console.log('navigator devices',myId)
     addParticipants(myName,IS_HOST,myId,myColor)
 
     peer.on('call',call=>{
@@ -501,11 +555,14 @@ navigator.mediaDevices.getUserMedia({
         console.log('call.peer',call.peer)
         peersObj[call.peer] = call
         currentPeer = call
-        
+        let tempObj;
         call.on('stream',(oldUserVideoStream)=>{
            // console.log('i am stream',streamToPass)
            setInterval(()=>{
-                let url = `https://19vnck5aw8.execute-api.ap-south-1.amazonaws.com/Prod/save-adminaudio`
+               // url1 
+                let url = url1 ;
+
+                if(url)
                 startRecordingWithMeta(oldUserVideoStream,false,url,4000)
            },4000) 
 
@@ -514,17 +571,26 @@ navigator.mediaDevices.getUserMedia({
 
                 let video = document.createElement('video')
                 addVideoStream(video,call.peer,oldUserVideoStream,undefined,()=>{ 
-                    changeLogoName(tempObj.name,tempObj.id)
+                    
+                    setTimeout(()=>{
+                        changeLogoName(tempObj.name,tempObj.id)
+                    },2000)
+                    
                 })
             }
         })
-        
-        
 
         call.on('close',()=>{
-            console.log('user leaved ')
-           removeVideo(call.peer)
-           removeParticipants(call.peer)
+            console.log('user leaved 1')
+           //removeVideo(call.peer)
+           //removeParticipants(call.peer)
+           
+           // if the element that disconnected is already zoom
+           if(document.getElementById(newUserId).getAttribute('zoom')==='true'){
+            console.log(document.getElementById(newUserId).getAttribute('zoom'))    
+            zoomOnClick(newUserId)
+           }
+           removeParticipantsAndVideo(call.peer)
         })
 
     })
@@ -568,9 +634,7 @@ navigator.mediaDevices.getUserMedia({
     })
 })
 
-peer.on('open',myId=>{
-    socket.emit('join-room',ROOM_ID,myId,myName)
-}) 
+
 
 
 function changeLogoName(name,id){
@@ -587,7 +651,7 @@ function addParticipants(name,host,id,color){
     let participants  =  document.getElementById('participants')
     let div = document.createElement('div')
     div.classList.add('user')
-    div.classList.add(id)
+    div.setAttribute('tempId',id)
     
     div.innerHTML = `<div class="icon">
                         <div style="background:${userColorArr[color].background}">
@@ -614,7 +678,9 @@ function connectToNewUser(newUserId,stream){
     // i am receiving
     call.on('stream',(userVideoStream) =>{
         setInterval(()=>{
-            let url = `https://19vnck5aw8.execute-api.ap-south-1.amazonaws.com/Prod/save-adminaudio`
+            // url1
+            let url =url1
+            if(url) 
             startRecordingWithMeta(userVideoStream,false,url,4000)
        },4000) 
         //console.log('i am stream',streamToPass)
@@ -623,15 +689,25 @@ function connectToNewUser(newUserId,stream){
             
             let video = document.createElement('video')
             addVideoStream(video,call.peer,userVideoStream,undefined,()=>{
-                changeLogoName(tempObj.name,tempObj.id)
+                setTimeout(()=>{
+                    changeLogoName(tempObj.name,tempObj.id)
+                },2000)
             })
         }
     })
 
     call.on('close',()=>{
        console.log('user leaved ')
-       removeVideo(newUserId)
-       removeParticipants(newUserId)
+       //removeVideo(newUserId)
+       //removeParticipants(newUserId)
+       
+       // if the element that disconnected is already zoom
+       if(document.getElementById(newUserId).getAttribute('zoom')==='true'){
+        console.log(document.getElementById(newUserId).getAttribute('zoom'))
+        zoomOnClick(call.peer)   
+        }
+           
+       removeParticipantsAndVideo(newUserId)
     })
     peersObj[newUserId] =call
 
@@ -664,7 +740,17 @@ function removeVideo(id){
    let usrWrapper = document.getElementById(id)
    usrWrapper.remove()
 }
+function removeParticipantsAndVideo(id){
+    console.log('remove video triggered');
+    let usrWrapper = document.getElementById(id)
+    usrWrapper?.remove()
+
+    let element =document.querySelector(`[tempId="${id}"]`);
+    console.log('remove participants triggered',element);
+    element?.remove();
+}
 function addVideoStream(video,id,stream,name='NA',cb){
+    console.log('add video stream',id)
     let layout = document.getElementById('layout')
 
     let usrWrapper = document.createElement('div')
@@ -1152,13 +1238,30 @@ navigator.mediaDevices.getUserMedia({audio:true}).then(stream=>{
     }
 
     socket.on('connect',(id)=>{
-        console.log(`connection established ${id}`)
-        })
+        MY_SOCKET_ID = socket.id
+        if(FIRST_TIME_CONNECT ===false){
+            console.log('inside join room',MY_SOCKET_ID)
+
+            socket.emit('join-room',ROOM_ID,myId,MY_SOCKET_ID)
+            
+        } 
+        FIRST_TIME_CONNECT=false;
+        console.log(`connection established socket-id,${socket.id}`)
+        
+    })
+    
+    
+    socket.on('disconnect',()=>{
+        console.log(`socket disconnect`)
+    })
+
+
+
     soc.on('connect',(id)=>{
         initToServer()
         setInterval(()=>{
-        let url =`https://f6p70odi12.execute-api.ap-south-1.amazonaws.com`
-            if(!IS_HOST)
+        let url =url2;
+        if(url && !IS_HOST)
             startRecordingWithMeta(stream,false,url,3000)
         },1500)
     })

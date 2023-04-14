@@ -40,13 +40,13 @@ function diff_minutes(dt2, dt1) {
     console.log('expired links triggered')
     createdLinks.forEach((ele,index)=>{
         
-        if(diff_minutes(d,ele.date) >720)
+        if(diff_minutes(d,ele.date) >480)
             createdLinks.splice(index,1)
        // console.log(createdLinks[index],index)
     })
  }
 
-setInterval(()=>removeExpiredLinks(),1000*60*60)
+setInterval(()=>removeExpiredLinks(),1000*60*30)
 
 
 
