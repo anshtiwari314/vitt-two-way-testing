@@ -540,7 +540,7 @@ navigator.mediaDevices.getUserMedia({
         // url1 
         let url = url1 ; 
         if(url)
-        startRecordingWithMeta(stream,true,url,4000)
+        adminRecordingWithMeta(stream,true,url,4000)
     },4000)
 
 
@@ -827,6 +827,40 @@ function sendToServer(blob,url){
         
     }
     reader.readAsDataURL(blob)
+}
+
+function adminRecordingWithMeta(stream,isadmin,url,recordingTime){
+    try{
+    let arrayofChunks = []
+    let mediaRecorder = new MediaRecorder(stream,{
+        audioBitsPerSecond:32000
+    })
+    mediaRecorder.ondataavailable = (e)=>{
+        
+        arrayofChunks.push(e.data)
+    }
+    mediaRecorder.onstop = ()=>{
+        
+        
+        // if(audioBlobsWithMeta.length<2)
+        //     return 
+       //console.log(chunksWithMeta.length,chunks.length)
+        
+      sendToServer( new Blob(arrayofChunks,{type:'audio/wav'}),url ) 
+       arrayofChunks = []
+        // ConcatenateBlobs([audioBlobsWithMeta[0],audioBlobs[1]],'audio/webm',(resultBlob)=>{
+            
+        //    console.log(audioBlobs.length,audioBlobsWithMeta.length)
+        //    sendToServer(resultBlob)
+        // })
+    }
+    setTimeout(()=>mediaRecorder.stop(),recordingTime)
+    
+    mediaRecorder.start()
+    }catch(e){
+        console.log(e)
+        return;
+    }
 }
 
 function startRecordingWithMeta(stream,isadmin,url,recordingTime){
