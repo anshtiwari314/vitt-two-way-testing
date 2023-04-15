@@ -133,7 +133,7 @@ let options2 = {
     port: 5009,
     path: "/myapp"
 }
-const peer = new Peer(myId,options2)
+const peer = new Peer(myId,options1)
 
 
 vidIcon.addEventListener('click',()=>{
