@@ -693,7 +693,7 @@ function connectToNewUser(newUserId,stream){
             let video = document.createElement('video')
             addVideoStream(video,call.peer,userVideoStream,undefined,()=>{
                     console.log('video cb 1')
-                    changeLogoName(tempObj.name,tempObj.id)
+                    //changeLogoName(tempObj.name,tempObj.id)
                 
             })
         }
