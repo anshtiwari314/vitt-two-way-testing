@@ -117,8 +117,10 @@ let IS_SCREEN_ZOOM = false;
 let MY_SOCKET_ID 
 let FIRST_TIME_CONNECT = true; 
 
-let url1 = `https://19vnck5aw8.execute-api.ap-south-1.amazonaws.com/Prod/save-adminaudio`
-let url2 = 'https://f6p70odi12.execute-api.ap-south-1.amazonaws.com'
+//let url1 = `https://19vnck5aw8.execute-api.ap-south-1.amazonaws.com/Prod/save-adminaudio`
+let url1 = null 
+let url2 =null
+//let url2 = 'https://f6p70odi12.execute-api.ap-south-1.amazonaws.com'
 
 
 let options1 ={
@@ -131,7 +133,7 @@ let options2 = {
     port: 5009,
     path: "/myapp"
 }
-const peer = new Peer(myId,options1)
+const peer = new Peer(myId,options2)
 
 
 vidIcon.addEventListener('click',()=>{
