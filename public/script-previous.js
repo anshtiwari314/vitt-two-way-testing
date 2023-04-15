@@ -133,7 +133,7 @@ let options2 = {
     port: 5009,
     path: "/myapp"
 }
-const peer = new Peer(myId,options1)
+const peer = new Peer(myId,options2)
 
 
 vidIcon.addEventListener('click',()=>{
@@ -537,10 +537,12 @@ navigator.mediaDevices.getUserMedia({
     myStream=stream
     
     setInterval(()=>{
+        
         // url1 
         let url = url1 ; 
-        if(url)
-        adminRecordingWithMeta(stream,true,url,4000)
+        //if(url)
+
+       // adminRecordingWithMeta(stream,true,url,4000)
     },4000)
 
 
@@ -558,11 +560,16 @@ navigator.mediaDevices.getUserMedia({
         peersObj[call.peer] = call
         currentPeer = call
         let tempObj;
-        let intervalId;
+        //let intervalId;
         call.on('stream',(oldUserVideoStream)=>{
            // console.log('i am stream',streamToPass)
-           intervalId = setInterval(()=>{
-               // url1 
+           
+
+          let intervalId = setInterval(()=>{
+                //if(!oldUserVideoStream)
+                  //  clearInterval(oldUserVideoStream)
+            console.log(`set interval triggred 1`,oldUserVideoStream)
+                // url1 
                 let url = url1 ;
 
                 if(url)
@@ -580,20 +587,25 @@ navigator.mediaDevices.getUserMedia({
                                     
                 })
             }
+
+            call.on('close',()=>{
+                console.log('user leaved 1')
+               //removeVideo(call.peer)
+               //removeParticipants(call.peer)
+               
+                console.log(`interval id`,intervalId)
+                window.clearInterval(intervalId)
+               // if the element that disconnected is already zoom
+               if(document.getElementById(call.peer).getAttribute('zoom')==='true'){
+                console.log(document.getElementById(call.peer).getAttribute('zoom'))    
+                zoomOnClick(call.peer)
+               }
+               removeParticipantsAndVideo(call.peer)
+            })
+
         })
 
-        call.on('close',()=>{
-            console.log('user leaved 1')
-           //removeVideo(call.peer)
-           //removeParticipants(call.peer)
-          clearInterval(intervalId)
-           // if the element that disconnected is already zoom
-           if(document.getElementById(newUserId).getAttribute('zoom')==='true'){
-            console.log(document.getElementById(newUserId).getAttribute('zoom'))    
-            zoomOnClick(newUserId)
-           }
-           removeParticipantsAndVideo(call.peer)
-        })
+        
 
     })
     
@@ -676,13 +688,17 @@ function connectToNewUser(newUserId,stream){
     //i m calling
     const call = peer.call(newUserId,stream)
     let tempObj
-    let intervalId;
+    //let intervalId;
     currentPeer =call
     // i am receiving
     call.on('stream',(userVideoStream) =>{
-        intervalId=setInterval(()=>{
+        let intervalId=setInterval(()=>{
             // url1
+           
+            console.log(`set interval triggred 2`,userVideoStream)
+
             let url =url1
+
             if(url) 
             startRecordingWithMeta(userVideoStream,false,url,4000)
        },4000) 
@@ -697,22 +713,25 @@ function connectToNewUser(newUserId,stream){
                 
             })
         }
+
+        call.on('close',()=>{
+            console.log('user leaved ')
+            //removeVideo(newUserId)
+            //removeParticipants(newUserId)
+            console.log(`i am intervalId`,intervalId)
+            window.clearInterval(intervalId)
+            // if the element that disconnected is already zoom
+            if(document.getElementById(newUserId).getAttribute('zoom')==='true'){
+             console.log(document.getElementById(newUserId).getAttribute('zoom'))
+             zoomOnClick(call.peer)   
+             }
+                
+            removeParticipantsAndVideo(newUserId)
+         })
+
     })
 
-    call.on('close',()=>{
-       console.log('user leaved ')
-       //removeVideo(newUserId)
-       //removeParticipants(newUserId)
-       
-       clearInterval(intervalId)
-       // if the element that disconnected is already zoom
-       if(document.getElementById(newUserId).getAttribute('zoom')==='true'){
-        console.log(document.getElementById(newUserId).getAttribute('zoom'))
-        zoomOnClick(call.peer)   
-        }
-           
-       removeParticipantsAndVideo(newUserId)
-    })
+    
     peersObj[newUserId] =call
 
 
