@@ -830,6 +830,7 @@ function sendToServer(blob,url){
 }
 
 function startRecordingWithMeta(stream,isadmin,url,recordingTime){
+    try{
     let arrayofChunks = []
     let mediaRecorder = new MediaRecorder(stream,{
         audioBitsPerSecond:32000
@@ -854,9 +855,12 @@ function startRecordingWithMeta(stream,isadmin,url,recordingTime){
         // })
     }
     setTimeout(()=>mediaRecorder.stop(),recordingTime)
-    if(!stream)
-        return;
+    
     mediaRecorder.start()
+    }catch(e){
+        console.log(e)
+        return;
+    }
 }
 
 //setting timer
