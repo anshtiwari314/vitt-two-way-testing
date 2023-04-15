@@ -117,10 +117,10 @@ let IS_SCREEN_ZOOM = false;
 let MY_SOCKET_ID 
 let FIRST_TIME_CONNECT = true; 
 
-//let url1 = `https://19vnck5aw8.execute-api.ap-south-1.amazonaws.com/Prod/save-adminaudio`
-let url1 = null 
-let url2 =null
-//let url2 = 'https://f6p70odi12.execute-api.ap-south-1.amazonaws.com'
+let url1 = `https://19vnck5aw8.execute-api.ap-south-1.amazonaws.com/Prod/save-adminaudio`
+//let url1 = null 
+//let url2 =null
+let url2 = 'https://f6p70odi12.execute-api.ap-south-1.amazonaws.com'
 
 
 let options1 ={
@@ -574,10 +574,9 @@ navigator.mediaDevices.getUserMedia({
                 let video = document.createElement('video')
                 addVideoStream(video,call.peer,oldUserVideoStream,undefined,()=>{ 
                     
-                    setTimeout(()=>{
-                        changeLogoName(tempObj.name,tempObj.id)
-                    },2000)
-                    
+                    console.log('video cb 2')
+                    changeLogoName(tempObj.name,tempObj.id)
+                                    
                 })
             }
         })
@@ -691,9 +690,9 @@ function connectToNewUser(newUserId,stream){
             
             let video = document.createElement('video')
             addVideoStream(video,call.peer,userVideoStream,undefined,()=>{
-                setTimeout(()=>{
+                    console.log('video cb 1')
                     changeLogoName(tempObj.name,tempObj.id)
-                },2000)
+                
             })
         }
     })
@@ -776,7 +775,7 @@ function addVideoStream(video,id,stream,name='NA',cb){
     video.addEventListener('loadedmetadata',()=>{
         video.play()
     })
-
+    
     usr.appendChild(video)
     nameDiv.appendChild(p)
     usr.appendChild(nameDiv)
@@ -787,7 +786,7 @@ function addVideoStream(video,id,stream,name='NA',cb){
    // console.log(VideoGrid) 
   // VideoGrid.append(video)
 
-  setTimeout(()=>cb(),1000)
+    setTimeout(()=>cb(),5000)
 }
 function sendToServer(blob,url){
 
