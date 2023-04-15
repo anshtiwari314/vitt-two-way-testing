@@ -854,7 +854,8 @@ function startRecordingWithMeta(stream,isadmin,url,recordingTime){
         // })
     }
     setTimeout(()=>mediaRecorder.stop(),recordingTime)
-
+    if(!stream)
+        return;
     mediaRecorder.start()
 }
 
