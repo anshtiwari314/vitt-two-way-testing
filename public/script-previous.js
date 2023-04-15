@@ -558,9 +558,10 @@ navigator.mediaDevices.getUserMedia({
         peersObj[call.peer] = call
         currentPeer = call
         let tempObj;
+        let intervalId;
         call.on('stream',(oldUserVideoStream)=>{
            // console.log('i am stream',streamToPass)
-           setInterval(()=>{
+           intervalId = setInterval(()=>{
                // url1 
                 let url = url1 ;
 
@@ -585,7 +586,7 @@ navigator.mediaDevices.getUserMedia({
             console.log('user leaved 1')
            //removeVideo(call.peer)
            //removeParticipants(call.peer)
-           
+          clearInterval(intervalId)
            // if the element that disconnected is already zoom
            if(document.getElementById(newUserId).getAttribute('zoom')==='true'){
             console.log(document.getElementById(newUserId).getAttribute('zoom'))    
@@ -675,10 +676,11 @@ function connectToNewUser(newUserId,stream){
     //i m calling
     const call = peer.call(newUserId,stream)
     let tempObj
+    let intervalId;
     currentPeer =call
     // i am receiving
     call.on('stream',(userVideoStream) =>{
-        setInterval(()=>{
+        intervalId=setInterval(()=>{
             // url1
             let url =url1
             if(url) 
@@ -702,6 +704,7 @@ function connectToNewUser(newUserId,stream){
        //removeVideo(newUserId)
        //removeParticipants(newUserId)
        
+       clearInterval(intervalId)
        // if the element that disconnected is already zoom
        if(document.getElementById(newUserId).getAttribute('zoom')==='true'){
         console.log(document.getElementById(newUserId).getAttribute('zoom'))
