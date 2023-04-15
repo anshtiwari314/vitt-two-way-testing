@@ -133,7 +133,7 @@ let options2 = {
     port: 5009,
     path: "/myapp"
 }
-const peer = new Peer(myId,options1)
+const peer = new Peer(myId,options2)
 
 
 vidIcon.addEventListener('click',()=>{
@@ -515,6 +515,7 @@ peer.on('open',myId=>{
         console.log(`peer open after 2s`,MY_SOCKET_ID)
     //    socket.emit('join-room',ROOM_ID,myId,MY_SOCKET_ID)
         socket.emit('join-room',ROOM_ID,myId)
+        FIRST_TIME_CONNECT=false;
     },2000)
       
 })
@@ -523,7 +524,24 @@ peer.on('disconnected',()=>{
     console.log(`disconnected from peer network`)
 })    
  
-  
+socket.on('connect',(id)=>{
+    MY_SOCKET_ID = socket.id
+    console.log('socket connect first time',FIRST_TIME_CONNECT)
+    if(FIRST_TIME_CONNECT ===false){
+        console.log('inside join room',MY_SOCKET_ID)
+
+        socket.emit('join-room',ROOM_ID,myId,MY_SOCKET_ID)
+        
+    } 
+    
+    console.log(`connection established socket-id,${socket.id}`)
+    
+})
+
+
+socket.on('disconnect',()=>{
+    console.log(`socket disconnect`)
+})  
 
 navigator.mediaDevices.getUserMedia({
     video:{
@@ -1300,26 +1318,7 @@ navigator.mediaDevices.getUserMedia({audio:true}).then(stream=>{
         document.querySelector('.box').appendChild(wrapBox)
     }
 
-    socket.on('connect',(id)=>{
-        MY_SOCKET_ID = socket.id
-        if(FIRST_TIME_CONNECT ===false){
-            console.log('inside join room',MY_SOCKET_ID)
-
-            socket.emit('join-room',ROOM_ID,myId,MY_SOCKET_ID)
-            
-        } 
-        FIRST_TIME_CONNECT=false;
-        console.log(`connection established socket-id,${socket.id}`)
-        
-    })
     
-    
-    socket.on('disconnect',()=>{
-        console.log(`socket disconnect`)
-    })
-
-
-
     soc.on('connect',(id)=>{
         initToServer()
         setInterval(()=>{
