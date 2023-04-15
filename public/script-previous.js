@@ -575,7 +575,7 @@ navigator.mediaDevices.getUserMedia({
                 addVideoStream(video,call.peer,oldUserVideoStream,undefined,()=>{ 
                     
                     console.log('video cb 2')
-                    changeLogoName(tempObj.name,tempObj.id)
+                    //changeLogoName(tempObj.name,tempObj.id)
                                     
                 })
             }
@@ -607,7 +607,7 @@ navigator.mediaDevices.getUserMedia({
               HOST_ID = obj.id
 
               addParticipants(obj.name,obj.host,conn.peer,obj.color)
-              
+              changeLogoName(obj.name,obj.id)
             });
             // Send messages
             conn.send({name:myName,host:IS_HOST,id:myId,color:myColor});
@@ -724,7 +724,8 @@ function connectToNewUser(newUserId,stream){
                 tempObj=obj
                 if(obj.host ===true)
                 HOST_ID = obj.id
-                addParticipants(obj.name,obj.host,newUserId,obj.color)                
+                addParticipants(obj.name,obj.host,newUserId,obj.color)  
+                changeLogoName(obj.name,obj.id)              
             });
 
             // Send messages
