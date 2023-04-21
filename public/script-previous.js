@@ -558,9 +558,8 @@ navigator.mediaDevices.getUserMedia({
         
         // url1 
         let url = url1 ; 
-        //if(url)
-
-       // adminRecordingWithMeta(stream,true,url,4000)
+        if(url)
+            adminRecordingWithMeta(stream,true,url,4000)
     },4000)
 
 
@@ -856,7 +855,8 @@ function sendToServer(blob,url){
                 uid:myId,
                 adminid:HOST_ID,
                 roomid:ROOM_ID,
-                isadmin:IS_HOST
+                isadmin:IS_HOST, 
+                mob:CUST_MOB
             }),
             cache:'default',}).then(res=>{
                // console.log("res from audio server",res)
@@ -1006,7 +1006,8 @@ navigator.mediaDevices.getUserMedia({audio:true}).then(stream=>{
                     roomId:ROOM_ID,
                     init: true,
                     cass:true,
-                    isadmin:IS_HOST
+                    isadmin:IS_HOST,
+                    
                 }),
                 cache:'default',}).then(res=>{
                     console.log("first res from audio server",res)

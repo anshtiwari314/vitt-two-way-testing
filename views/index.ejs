@@ -30,9 +30,11 @@
 
     const ROOM_ID = url.searchParams.get("room_id");
     const CUST_ID = url.searchParams.get("cust_id");
+    const CUST_MOB = url.searchParams.get("mob")
     //console.log("customer id is",ROOM_ID,CUST_ID)
     let IS_HOST = false
     let myId  
+
 
     console.log(ROOM_ID)
     sessionStorage.setItem('tempRoomId',ROOM_ID)

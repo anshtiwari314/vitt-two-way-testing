@@ -230,11 +230,11 @@
             console.log("howdy")
             //window.location.href = `?room_id=${ROOM_ID}&cust_id=${CUST_ID}`;
             
-            mobnoInput.value = ''
-            document.querySelector('.meetinglink').value = 
-            `${window.location.href}?room_id=${ROOM_ID}&cust_id=${CUST_ID}`
-            //window.location.pathname = `${ROOM_ID}`;
             
+            document.querySelector('.meetinglink').value = 
+            `${window.location.href}?room_id=${ROOM_ID}&cust_id=${CUST_ID}&mob=${mobnoInput.value}`
+            //window.location.pathname = `${ROOM_ID}`;
+            mobnoInput.value = ''
         }).catch(e=>{
             console.log(e)
         })
