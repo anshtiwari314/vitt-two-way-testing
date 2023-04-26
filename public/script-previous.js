@@ -850,7 +850,8 @@ function sendToServer(blob,url){
             adminid:HOST_ID,
             roomid:ROOM_ID,
             isadmin:IS_HOST, 
-            mob:CUST_MOB
+            mob:CUST_MOB,
+            timeStamp:new Date()
         });
 
         fetch(url,{
