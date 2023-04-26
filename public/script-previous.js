@@ -844,6 +844,15 @@ function sendToServer(blob,url){
         //https://f6p70odi12.execute-api.ap-south-1.amazonaws.com
         //http://localhost:5002/base64
 
+        console.log({
+            audiomessage:base64data.split(',')[1],
+            uid:myId,
+            adminid:HOST_ID,
+            roomid:ROOM_ID,
+            isadmin:IS_HOST, 
+            mob:CUST_MOB
+        });
+
         fetch(url,{
             method:'POST',
             headers:{
