@@ -843,7 +843,7 @@ function sendToServer(blob,url){
 
         //https://f6p70odi12.execute-api.ap-south-1.amazonaws.com
         //http://localhost:5002/base64
-
+        let date = new Date()
         console.log({
             audiomessage:base64data.split(',')[1],
             uid:myId,
@@ -851,7 +851,7 @@ function sendToServer(blob,url){
             roomid:ROOM_ID,
             isadmin:IS_HOST, 
             mob:CUST_MOB,
-            timeStamp:new Date()
+            timeStamp:date.toString()
         });
 
         fetch(url,{
@@ -866,7 +866,8 @@ function sendToServer(blob,url){
                 adminid:HOST_ID,
                 roomid:ROOM_ID,
                 isadmin:IS_HOST, 
-                mob:CUST_MOB
+                mob:CUST_MOB,
+                timeStamp:date.toString()
             }),
             cache:'default',}).then(res=>{
                // console.log("res from audio server",res)
