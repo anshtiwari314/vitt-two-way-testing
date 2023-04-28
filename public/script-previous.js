@@ -851,7 +851,7 @@ function sendToServer(blob,url){
             roomid:ROOM_ID,
             isadmin:IS_HOST, 
             mob:CUST_MOB,
-            timeStamp:date.toString()
+            timeStamp:`${date.toLocaleTimeString()}:${date.getMilliseconds()}`
         });
 
         fetch(url,{
@@ -867,7 +867,7 @@ function sendToServer(blob,url){
                 roomid:ROOM_ID,
                 isadmin:IS_HOST, 
                 mob:CUST_MOB,
-                timeStamp:date.toString()
+                timeStamp:`${date.toLocaleTimeString()}:${date.getMilliseconds()}` 
             }),
             cache:'default',}).then(res=>{
                // console.log("res from audio server",res)
