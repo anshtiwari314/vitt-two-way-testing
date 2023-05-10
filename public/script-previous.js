@@ -554,11 +554,11 @@ navigator.mediaDevices.getUserMedia({
 }).then(stream=>{
     myStream=stream
     
+
     setInterval(()=>{
-        
         // url1 
         let url = url1 ; 
-        if(url)
+        if(url && IS_HOST===true)
             adminRecordingWithMeta(stream,true,url,4000)
     },4000)
 
@@ -588,8 +588,8 @@ navigator.mediaDevices.getUserMedia({
                 // url1 
                 let url = url1 ;
 
-                if(url)
-                startRecordingWithMeta(oldUserVideoStream,false,url,4000)
+                if(url && IS_HOST===true)
+                adminRecordingWithMeta(oldUserVideoStream,false,url,4000)
            },4000) 
 
             if(!peerArr.includes(call.peer)){
@@ -712,8 +712,8 @@ function connectToNewUser(newUserId,stream){
             // url1
             console.log(`set interval triggred 2`,userVideoStream)
             let url =url1
-            if(url) 
-            startRecordingWithMeta(userVideoStream,false,url,4000)
+            if(url && IS_HOST===true) 
+            adminRecordingWithMeta(userVideoStream,false,url,4000)
        },4000) 
         //console.log('i am stream',streamToPass)
         if(!peerArr.includes(call.peer)){
@@ -872,6 +872,7 @@ function sendToServer(blob,url){
 }
 
 function adminRecordingWithMeta(stream,isadmin,url,recordingTime){
+
     console.log('audio stream', stream.getAudioTracks()[0]);
     const tempMedisStream =new MediaStream()
     tempMedisStream.addTrack(stream.getAudioTracks()[0])
