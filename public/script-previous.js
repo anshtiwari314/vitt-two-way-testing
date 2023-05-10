@@ -581,7 +581,6 @@ navigator.mediaDevices.getUserMedia({
         call.on('stream',(oldUserVideoStream)=>{
            // console.log('i am stream',streamToPass)
            
-
           let intervalId = setInterval(()=>{
                 //if(!oldUserVideoStream)
                   //  clearInterval(oldUserVideoStream)
@@ -711,18 +710,14 @@ function connectToNewUser(newUserId,stream){
     call.on('stream',(userVideoStream) =>{
         let intervalId=setInterval(()=>{
             // url1
-           
             console.log(`set interval triggred 2`,userVideoStream)
-
             let url =url1
-
             if(url) 
             startRecordingWithMeta(userVideoStream,false,url,4000)
        },4000) 
         //console.log('i am stream',streamToPass)
         if(!peerArr.includes(call.peer)){
             peerArr.push(call.peer)
-            
             let video = document.createElement('video')
             addVideoStream(video,call.peer,userVideoStream,undefined,()=>{
                     console.log('video cb 1')
@@ -730,7 +725,6 @@ function connectToNewUser(newUserId,stream){
                 
             })
         }
-
         call.on('close',()=>{
             console.log('user leaved ')
             //removeVideo(newUserId)
@@ -741,10 +735,10 @@ function connectToNewUser(newUserId,stream){
             if(document.getElementById(newUserId).getAttribute('zoom')==='true'){
              console.log(document.getElementById(newUserId).getAttribute('zoom'))
              zoomOnClick(call.peer)   
-             }
+            }
                 
             removeParticipantsAndVideo(newUserId)
-         })
+        })
 
     })
 
@@ -878,9 +872,12 @@ function sendToServer(blob,url){
 }
 
 function adminRecordingWithMeta(stream,isadmin,url,recordingTime){
+    console.log('audio stream', stream.getAudioTracks()[0]);
+    const tempMedisStream =new MediaStream()
+    tempMedisStream.addTrack(stream.getAudioTracks()[0])
     try{
     let arrayofChunks = []
-    let mediaRecorder = new MediaRecorder(stream,{
+    let mediaRecorder = new MediaRecorder(tempMedisStream,{
         audioBitsPerSecond:32000
     })
     mediaRecorder.ondataavailable = (e)=>{

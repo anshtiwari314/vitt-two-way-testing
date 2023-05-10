@@ -122,7 +122,13 @@
             <h1>Vitt Video Chat App</h1>
             <div class="options">
                 <span>
-                    <input type="text" class="client-mob" placeholder="clients mob number"/> 
+                    <input                     
+                        type="tel" 
+                        pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
+                        name="phone"
+                        class="client-mob"
+                        placeholder="10 digit mob number" 
+                    /> 
                 </span>
                 <button id="newMeeting">new meeting</button>
                 <br/> 

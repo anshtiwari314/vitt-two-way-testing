@@ -1,18 +1,24 @@
 const express = require('express')
 const app = express()
 const server = require('http').Server(app)
-const io = require('socket.io')(server)
+const io = require('socket.io')(server,{
+    cors: {
+        origin: "*",
+        methods: ["GET", "POST"]
+      }
+})
 const {v4:uuid4} = require('uuid')
 const dotenv = require('dotenv')
 const cors = require('cors')
 
-let port = process.env.PORT || 5000
+let port = process.env.PORT || 3001
 
 dotenv.config()
 app.set("view engine","ejs")
 app.use(express.static('public'))
 app.use(express.json())
 app.use(express.urlencoded({extended:true}))
+
 app.use(cors({
     origin:'*'
 }))
@@ -71,7 +77,7 @@ app.post('/client-mob',(req,res)=>{
     "mobileno ": "8708213235", 
     "custid": "12345", 
     "newuser": false
-}
+    }
    res.json(client_mob).status(200)
 })
 
