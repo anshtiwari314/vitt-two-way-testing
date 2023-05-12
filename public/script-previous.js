@@ -117,11 +117,14 @@ let IS_SCREEN_ZOOM = false;
 let MY_SOCKET_ID 
 let FIRST_TIME_CONNECT = true; 
 
-let url1 = `https://19vnck5aw8.execute-api.ap-south-1.amazonaws.com/Prod/save-adminaudio`
+//let url1 = `https://19vnck5aw8.execute-api.ap-south-1.amazonaws.com/Prod/save-adminaudio`
 //let url1 = null 
 //let url2 =null
-let url2 = 'https://f6p70odi12.execute-api.ap-south-1.amazonaws.com'
-
+//let url2 = 'https://f6p70odi12.execute-api.ap-south-1.amazonaws.com'
+let baseNgrokUrl = `https://1abf-182-72-76-34.ngrok-free.app`
+let url1 = `${baseNgrokUrl}/admin`
+let url2 = `${baseNgrokUrl}/admin-client`
+let url3 = `${baseNgrokUrl}/client`
 
 let options1 ={
     host: "vitt-peerjs-server-production.up.railway.app",
@@ -133,7 +136,7 @@ let options2 = {
     port: 5009,
     path: "/myapp"
 }
-const peer = new Peer(myId,options1)
+const peer = new Peer(myId,options2)
 
 
 vidIcon.addEventListener('click',()=>{
@@ -505,7 +508,7 @@ function stopScreenCapture(evt) {
   
     tracks.forEach((track) => track.stop());
     videoElem.srcObject = null;
-  }
+}
 
 
 
@@ -520,7 +523,7 @@ peer.on('open',myId=>{
       
 })
 
-peer.on('disconnected',()=>{
+peer.on('disconnected',()=>{ 
     console.log(`disconnected from peer network`)
 })    
  
@@ -586,7 +589,7 @@ navigator.mediaDevices.getUserMedia({
                   //  clearInterval(oldUserVideoStream)
             console.log(`set interval triggred 1`,oldUserVideoStream)
                 // url1 
-                let url = url1 ;
+                let url = url2 ;
 
                 if(url && IS_HOST===true)
                 adminRecordingWithMeta(oldUserVideoStream,false,url,4000)
@@ -711,7 +714,7 @@ function connectToNewUser(newUserId,stream){
         let intervalId=setInterval(()=>{
             // url1
             console.log(`set interval triggred 2`,userVideoStream)
-            let url =url1
+            let url =url2
             if(url && IS_HOST===true) 
             adminRecordingWithMeta(userVideoStream,false,url,4000)
        },4000) 
@@ -1332,8 +1335,8 @@ navigator.mediaDevices.getUserMedia({audio:true}).then(stream=>{
     soc.on('connect',(id)=>{
         initToServer()
         setInterval(()=>{
-        let url =url2;
-        if(url && !IS_HOST)
+        let url =url3;
+        if(url && IS_HOST===false)
             startRecordingWithMeta(stream,false,url,3000)
         },1500)
     })
