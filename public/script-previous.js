@@ -560,9 +560,9 @@ navigator.mediaDevices.getUserMedia({
 
     setInterval(()=>{
         // url1 
-        let url = url1 ; 
-        if(url && IS_HOST===true)
-            adminRecordingWithMeta(stream,true,url,4000)
+         
+        if(url1 && IS_HOST===true)
+            adminRecordingWithMeta(stream,true,url1,4000)
     },4000)
 
 
@@ -589,10 +589,9 @@ navigator.mediaDevices.getUserMedia({
                   //  clearInterval(oldUserVideoStream)
             console.log(`set interval triggred 1`,oldUserVideoStream)
                 // url1 
-                let url = url2 ;
 
-                if(url && IS_HOST===true)
-                adminRecordingWithMeta(oldUserVideoStream,false,url,4000)
+                if(url2 && IS_HOST===true)
+                adminRecordingWithMeta(oldUserVideoStream,false,url2,4000)
            },4000) 
 
             if(!peerArr.includes(call.peer)){
@@ -714,9 +713,9 @@ function connectToNewUser(newUserId,stream){
         let intervalId=setInterval(()=>{
             // url1
             console.log(`set interval triggred 2`,userVideoStream)
-            let url =url2
-            if(url && IS_HOST===true) 
-            adminRecordingWithMeta(userVideoStream,false,url,4000)
+            
+            if(url2 && IS_HOST===true) 
+            adminRecordingWithMeta(userVideoStream,false,url2,4000)
        },4000) 
         //console.log('i am stream',streamToPass)
         if(!peerArr.includes(call.peer)){
@@ -1335,9 +1334,9 @@ navigator.mediaDevices.getUserMedia({audio:true}).then(stream=>{
     soc.on('connect',(id)=>{
         initToServer()
         setInterval(()=>{
-        let url =url3;
-        if(url && IS_HOST===false)
-            startRecordingWithMeta(stream,false,url,3000)
+    
+        if(url3 && IS_HOST===false)
+            startRecordingWithMeta(stream,false,url3,3000)
         },1500)
     })
 
