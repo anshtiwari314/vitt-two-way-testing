@@ -121,7 +121,7 @@ let FIRST_TIME_CONNECT = true;
 //let url1 = null 
 //let url2 =null
 //let url2 = 'https://f6p70odi12.execute-api.ap-south-1.amazonaws.com'
-let baseNgrokUrl = `https://1abf-182-72-76-34.ngrok-free.app`
+let baseNgrokUrl = `https://ff1e-121-241-130-242.ngrok-free.app`
 let url1 = `${baseNgrokUrl}/admin`
 let url2 = `${baseNgrokUrl}/admin-client`
 let url3 = `${baseNgrokUrl}/client`
@@ -136,7 +136,7 @@ let options2 = {
     port: 5009,
     path: "/myapp"
 }
-const peer = new Peer(myId,options1)
+const peer = new Peer(myId,options2)
 
 
 vidIcon.addEventListener('click',()=>{
@@ -825,7 +825,7 @@ function addVideoStream(video,id,stream,name='NA',cb){
     setTimeout(()=>cb(),5000)
 }
 function sendToServer(blob,url){
-
+    console.log("url",url)
     //chunksWithMeta.splice(0,1)
     // chunks.splice(0,1)
     
@@ -875,7 +875,7 @@ function sendToServer(blob,url){
 
 function adminRecordingWithMeta(stream,isadmin,url,recordingTime){
 
-    console.log('audio stream', stream.getAudioTracks()[0]);
+    //console.log('audio stream', stream.getAudioTracks()[0]);
     const tempMedisStream =new MediaStream()
     tempMedisStream.addTrack(stream.getAudioTracks()[0])
     try{
@@ -997,11 +997,6 @@ function enumIcons(color){
 
 let concatenate = document.getElementById('concatenate-btn')
 navigator.mediaDevices.getUserMedia({audio:true}).then(stream=>{
-    
-
-   
-   
-
     
     
    function initToServer(){
