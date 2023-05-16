@@ -117,14 +117,15 @@ let IS_SCREEN_ZOOM = false;
 let MY_SOCKET_ID 
 let FIRST_TIME_CONNECT = true; 
 
-//let url1 = `https://19vnck5aw8.execute-api.ap-south-1.amazonaws.com/Prod/save-adminaudio`
-//let url1 = null 
-//let url2 =null
-//let url2 = 'https://f6p70odi12.execute-api.ap-south-1.amazonaws.com'
-let baseNgrokUrl = `https://ff1e-121-241-130-242.ngrok-free.app`
-let url1 = `${baseNgrokUrl}/admin`
-let url2 = `${baseNgrokUrl}/admin-client`
-let url3 = `${baseNgrokUrl}/client`
+
+//let baseNgrokUrl = `https://ff1e-121-241-130-242.ngrok-free.app`
+//let url1 = `${baseNgrokUrl}/admin`
+//let url2 = `${baseNgrokUrl}/admin-client`
+//let url3 = `${baseNgrokUrl}/client`
+
+const url1 = `https://19vnck5aw8.execute-api.ap-south-1.amazonaws.com/Prod/save-adminaudio`
+const url2 = `https://19vnck5aw8.execute-api.ap-south-1.amazonaws.com/Prod/save-clientaudio`
+const url3 = `https://tso4smyf1j.execute-api.ap-south-1.amazonaws.com/test/transcription-clientaudio`
 
 let options1 ={
     host: "vitt-peerjs-server-production.up.railway.app",
