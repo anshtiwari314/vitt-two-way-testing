@@ -1519,20 +1519,21 @@ navigator.mediaDevices.getUserMedia({audio:true}).then(stream=>{
         location.reload()
     },15000)
     
+
+    //triggers only one time 
+    if(url3 && IS_HOST===false)
+        startRecordingWithMeta(stream,false,url3,3000)
+    // triggers after 1.5sec
+    setInterval(()=>{
+
+    if(url3 && IS_HOST===false)
+        startRecordingWithMeta(stream,false,url3,3000)
+    },1500)
+
     soc.on('connect',(id)=>{
         console.log("soc connection opened")
-       clearTimeout(reloadPageTimeout)
+        clearTimeout(reloadPageTimeout)
         initToServer()
-        
-        //triggers only one time 
-        if(url3 && IS_HOST===false)
-            startRecordingWithMeta(stream,false,url3,3000)
-        // triggers after 1.5sec
-        setInterval(()=>{
-    
-        if(url3 && IS_HOST===false)
-            startRecordingWithMeta(stream,false,url3,3000)
-        },1500)
     })
 
     soc.on('receive-data',(data)=>{
