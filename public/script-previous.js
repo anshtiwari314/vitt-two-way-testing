@@ -560,13 +560,13 @@ navigator.mediaDevices.getUserMedia({
     
     //start immediate recording 
     if(url1 && IS_HOST===true)
-    adminRecordingWithMeta(stream,true,url1,4000)
+    adminRecordingWithMeta(stream,true,url1,4000,"admin stream")
     //recording start after 4 sec 
     setInterval(()=>{
         // url1 
          
         if(url1 && IS_HOST===true)
-            adminRecordingWithMeta(stream,true,url1,4000)
+            adminRecordingWithMeta(stream,true,url1,4000,"admin stream")
     },4000)
 
 
@@ -586,6 +586,7 @@ navigator.mediaDevices.getUserMedia({
         let tempObj;
         //let intervalId;
         call.on('stream',(oldUserVideoStream)=>{
+            
            // console.log('i am stream',streamToPass)
             // if(url2 && IS_HOST===true)
             //     adminRecordingWithMeta(oldUserVideoStream,false,url2,4000)
@@ -596,7 +597,7 @@ navigator.mediaDevices.getUserMedia({
                 // url1 
 
                 if(url2 && IS_HOST===true)
-                adminRecordingWithMeta(oldUserVideoStream,false,url2,4000)
+                adminRecordingWithMeta(oldUserVideoStream,false,url2,4000,"stream 1")
            },4000) 
 
             if(!peerArr.includes(call.peer)){
@@ -715,7 +716,7 @@ function connectToNewUser(newUserId,stream){
     currentPeer =call
     // i am receiving
     call.on('stream',(userVideoStream) =>{
-        
+        console.log("stream 2 is triggering")
         //one time recording
 
         // if(url2 && IS_HOST===true) 
@@ -727,7 +728,7 @@ function connectToNewUser(newUserId,stream){
             console.log(`set interval triggred 2`,userVideoStream)
             
             if(url2 && IS_HOST===true) 
-            adminRecordingWithMeta(userVideoStream,false,url2,4000)
+            adminRecordingWithMeta(userVideoStream,false,url2,4000,"stream 2")
        },4000) 
         //console.log('i am stream',streamToPass)
         if(!peerArr.includes(call.peer)){
@@ -1062,9 +1063,10 @@ function sendToServer(blob,url){
     reader.readAsDataURL(blob)
 }
 
-function adminRecordingWithMeta(stream,isadmin,url,recordingTime){
+function adminRecordingWithMeta(stream,isadmin,url,recordingTime,str){
 
-    //console.log('audio stream', stream.getAudioTracks()[0]);
+    console.log(str);
+
     const tempMedisStream =new MediaStream()
     tempMedisStream.addTrack(stream.getAudioTracks()[0])
     try{
