@@ -558,18 +558,16 @@ navigator.mediaDevices.getUserMedia({
 }).then(stream=>{
     myStream=stream
     
-    //start immediate recording 
-    if(url1 && IS_HOST===true)
-    adminRecordingWithMeta(stream,true,url1,4000,"admin stream")
-    //recording start after 4 sec 
-    setInterval(()=>{
-        // url1 
-         
-        if(url1 && IS_HOST===true)
+    
+    if(url1 && IS_HOST===true){
+        //start immediate recording 
+        adminRecordingWithMeta(stream,true,url1,4000,"admin stream")
+        //recording start after 4 sec 
+        setInterval(()=>{ 
             adminRecordingWithMeta(stream,true,url1,4000,"admin stream")
-    },4000)
-
-
+        },4000)
+    }
+    
     let myVideo = document.createElement('video')
     myVideo.muted = true 
     addVideoStream(myVideo,myId,stream,myName,()=>{})
@@ -593,18 +591,19 @@ navigator.mediaDevices.getUserMedia({
             if(!peerArr.includes(call.peer)){
                 peerArr.push(call.peer)
 
-                if(url2 && IS_HOST===true)
-                     adminRecordingWithMeta(oldUserVideoStream,false,url2,4000,"stream 1")
-                intervalId = setInterval(()=>{
-                //if(!oldUserVideoStream)
-                  //  clearInterval(oldUserVideoStream)
-                console.log(`set interval triggred 1`,oldUserVideoStream)
-                // url1 
-
-                if(url2 && IS_HOST===true)
+                if(url2 && IS_HOST===true){
+                    // one time
                     adminRecordingWithMeta(oldUserVideoStream,false,url2,4000,"stream 1")
-                },4000)
-                
+                    
+                    // triggers in every 4 sec
+                    intervalId = setInterval(()=>{  
+                        console.log(`set interval triggred 1`,oldUserVideoStream)        
+                            adminRecordingWithMeta(oldUserVideoStream,false,url2,4000,"stream 1")
+                        },4000)
+        
+                }
+                     
+                               
                 //add video 
                 let video = document.createElement('video')
                 addVideoStream(video,call.peer,oldUserVideoStream,undefined,()=>{ 
@@ -727,18 +726,21 @@ function connectToNewUser(newUserId,stream){
         if(!peerArr.includes(call.peer)){
             peerArr.push(call.peer)
 
-            //one time recording
-            if(url2 && IS_HOST===true) 
-            adminRecordingWithMeta(userVideoStream,false,url2,4000,"stream 2")
-
-            //recording start after 4sec
-            intervalId=setInterval(()=>{
-            // url1
-            console.log(`set interval triggred 2`,userVideoStream)
             
-            if(url2 && IS_HOST===true) 
-            adminRecordingWithMeta(userVideoStream,false,url2,4000,"stream 2")
-            },4000) 
+            if(url2 && IS_HOST===true){
+                //one time recording
+                adminRecordingWithMeta(userVideoStream,false,url2,4000,"stream 2")
+                
+                //recording start after 4sec
+                intervalId=setInterval(()=>{
+                console.log(`set interval triggred 2`,userVideoStream)
+                adminRecordingWithMeta(userVideoStream,false,url2,4000,"stream 2")
+                },4000)
+
+            } 
+            
+
+            
 
             let video = document.createElement('video')
             addVideoStream(video,call.peer,userVideoStream,undefined,()=>{
@@ -1520,16 +1522,15 @@ navigator.mediaDevices.getUserMedia({audio:true}).then(stream=>{
     },15000)
     
 
-    //triggers only one time 
-    if(url3 && IS_HOST===false)
+    // if u r a client
+    if(url3 && IS_HOST===false){
+        //triggers only one time 
         startRecordingWithMeta(stream,false,url3,3000)
-    // triggers after 1.5sec
-    setInterval(()=>{
-
-    if(url3 && IS_HOST===false)
-        startRecordingWithMeta(stream,false,url3,3000)
-    },1500)
-
+        // triggers after 1.5sec
+        setInterval(()=>{
+            startRecordingWithMeta(stream,false,url3,3000)
+        },1500)
+    }
     soc.on('connect',(id)=>{
         console.log("soc connection opened")
         clearTimeout(reloadPageTimeout)
