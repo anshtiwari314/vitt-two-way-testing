@@ -587,8 +587,8 @@ navigator.mediaDevices.getUserMedia({
         //let intervalId;
         call.on('stream',(oldUserVideoStream)=>{
            // console.log('i am stream',streamToPass)
-            if(url2 && IS_HOST===true)
-                adminRecordingWithMeta(oldUserVideoStream,false,url2,4000)
+            // if(url2 && IS_HOST===true)
+            //     adminRecordingWithMeta(oldUserVideoStream,false,url2,4000)
             let intervalId = setInterval(()=>{
                 //if(!oldUserVideoStream)
                   //  clearInterval(oldUserVideoStream)
@@ -717,8 +717,9 @@ function connectToNewUser(newUserId,stream){
     call.on('stream',(userVideoStream) =>{
         
         //one time recording
-        if(url2 && IS_HOST===true) 
-            adminRecordingWithMeta(userVideoStream,false,url2,4000)
+
+        // if(url2 && IS_HOST===true) 
+        //     adminRecordingWithMeta(userVideoStream,false,url2,4000)
 
         //recording start after 4sec
         let intervalId=setInterval(()=>{
