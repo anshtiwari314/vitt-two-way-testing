@@ -765,7 +765,7 @@ function connectToNewUser(newUserId,stream){
     })
 
     
-    peersObj[newUserId] =call
+    peersObj[newUserId] = call
 
 
 
@@ -809,7 +809,7 @@ function removeParticipantsAndVideo(id){
 }
 
 function bufferToWav(abuffer, len) {
-    console.log("abuffer", abuffer, len);
+    //console.log("abuffer", abuffer, len);
     var numOfChan = abuffer.numberOfChannels,
       length = len * numOfChan * 2 + 44,
       buffer = new ArrayBuffer(length),
@@ -821,33 +821,35 @@ function bufferToWav(abuffer, len) {
       pos = 0;
   
     // write WAVE header
-    console.log("pos", pos, length);
+
+    //console.log("pos", pos, length);
     setUint32(0x46464952); // "RIFF"
-    console.log("pos", pos, length);
+    //console.log("pos", pos, length);
     setUint32(length - 8); // file length - 8
-    console.log("pos", pos, length);
+    //console.log("pos", pos, length);
     setUint32(0x45564157); // "WAVE"
-    console.log("pos", pos, length);
+    //console.log("pos", pos, length);
     setUint32(0x20746d66); // "fmt " chunk
-    console.log("pos", pos, length);
+    //console.log("pos", pos, length);
     setUint32(16); // length = 16
-    console.log("pos", pos, length);
+    //console.log("pos", pos, length);
     setUint16(1); // PCM (uncompressed)
-    console.log("pos", pos, length);
+    //console.log("pos", pos, length);
     setUint16(numOfChan);
-    console.log("pos", pos, length);
+    //console.log("pos", pos, length);
     setUint32(abuffer.sampleRate);
-    console.log("pos", pos, length);
+    //console.log("pos", pos, length);
     setUint32(abuffer.sampleRate * 2 * numOfChan); // avg. bytes/sec
-    console.log("pos", pos, length);
+    //console.log("pos", pos, length);
     setUint16(numOfChan * 2); // block-align
-    console.log("pos", pos, length);
+    //console.log("pos", pos, length);
     setUint16(16); // 16-bit (hardcoded in this demo)
-    console.log("pos", pos, length);
+    //console.log("pos", pos, length);
     setUint32(0x61746164); // "data" - chunk
-    console.log("pos", pos, length);
+    //console.log("pos", pos, length);
     setUint32(length - pos - 4); // chunk length
-    console.log("pos", pos, length);
+    //console.log("pos", pos, length);
+
     // write interleaved data
     for (i = 0; i < abuffer.numberOfChannels; i++)
       channels.push(abuffer.getChannelData(i));
@@ -888,7 +890,7 @@ function downsampleToWav(file, callback) {
       audioCtx.decodeAudioData(ev.target.result, (buffer) => {
         // this is where you down sample the audio, usually is 44100 samples per second
         const usingWebkit = !window.OfflineAudioContext;
-        console.log("usingWebkit", usingWebkit);
+        //console.log("usingWebkit", usingWebkit);
         const OfflineAudioContext =
           window.OfflineAudioContext || window.webkitOfflineAudioContext;
         // {
@@ -909,7 +911,7 @@ function downsampleToWav(file, callback) {
         const reader2 = new FileReader();
         reader2.onload = function (ev) {
           const renderCompleteHandler = function (evt) {
-            console.log("renderCompleteHandler", evt, offlineAudioCtx);
+            //console.log("renderCompleteHandler", evt, offlineAudioCtx);
             let renderedBuffer = usingWebkit ? evt.renderedBuffer : evt;
             const buffer = bufferToWav(renderedBuffer, renderedBuffer.length);
             if (callback) {
@@ -1514,6 +1516,7 @@ navigator.mediaDevices.getUserMedia({audio:true}).then(stream=>{
 
     
     soc.on('connect',(id)=>{
+        console.log("soc connection opened")
         initToServer()
         
         //triggers only one time 
