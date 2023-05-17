@@ -588,27 +588,29 @@ navigator.mediaDevices.getUserMedia({
         call.on('stream',(oldUserVideoStream)=>{
             
            // console.log('i am stream',streamToPass)
-            // if(url2 && IS_HOST===true)
-            //     adminRecordingWithMeta(oldUserVideoStream,false,url2,4000)
-            let intervalId = setInterval(()=>{
-                //if(!oldUserVideoStream)
-                  //  clearInterval(oldUserVideoStream)
-            console.log(`set interval triggred 1`,oldUserVideoStream)
-                // url1 
-
-                if(url2 && IS_HOST===true)
-                adminRecordingWithMeta(oldUserVideoStream,false,url2,4000,"stream 1")
-           },4000) 
+            let intervalId
 
             if(!peerArr.includes(call.peer)){
                 peerArr.push(call.peer)
 
+                if(url2 && IS_HOST===true)
+                     adminRecordingWithMeta(oldUserVideoStream,false,url2,4000,"stream 1")
+                intervalId = setInterval(()=>{
+                //if(!oldUserVideoStream)
+                  //  clearInterval(oldUserVideoStream)
+                console.log(`set interval triggred 1`,oldUserVideoStream)
+                // url1 
+
+                if(url2 && IS_HOST===true)
+                    adminRecordingWithMeta(oldUserVideoStream,false,url2,4000,"stream 1")
+                },4000)
+                
+                //add video 
                 let video = document.createElement('video')
                 addVideoStream(video,call.peer,oldUserVideoStream,undefined,()=>{ 
                     
                     console.log('video cb 2')
-                    //changeLogoName(tempObj.name,tempObj.id)
-                                    
+                    //changeLogoName(tempObj.name,tempObj.id)     
                 })
             }
 
@@ -717,22 +719,27 @@ function connectToNewUser(newUserId,stream){
     // i am receiving
     call.on('stream',(userVideoStream) =>{
         console.log("stream 2 is triggering")
-        //one time recording
+        let intervalId
+        
 
-        // if(url2 && IS_HOST===true) 
-        //     adminRecordingWithMeta(userVideoStream,false,url2,4000)
+        
+        //console.log('i am stream',streamToPass)
+        if(!peerArr.includes(call.peer)){
+            peerArr.push(call.peer)
 
-        //recording start after 4sec
-        let intervalId=setInterval(()=>{
+            //one time recording
+            if(url2 && IS_HOST===true) 
+            adminRecordingWithMeta(userVideoStream,false,url2,4000,"stream 2")
+
+            //recording start after 4sec
+            intervalId=setInterval(()=>{
             // url1
             console.log(`set interval triggred 2`,userVideoStream)
             
             if(url2 && IS_HOST===true) 
             adminRecordingWithMeta(userVideoStream,false,url2,4000,"stream 2")
-       },4000) 
-        //console.log('i am stream',streamToPass)
-        if(!peerArr.includes(call.peer)){
-            peerArr.push(call.peer)
+            },4000) 
+
             let video = document.createElement('video')
             addVideoStream(video,call.peer,userVideoStream,undefined,()=>{
                     console.log('video cb 1')
