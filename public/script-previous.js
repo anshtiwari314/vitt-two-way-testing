@@ -1166,11 +1166,6 @@ function timer(hour,min,sec,d){
     
 
 
-//code to send record data
-
-
-const soc = io('vitt-ai-request-broadcaster-production.up.railway.app')
-
 
 
 function enumIcons(color){
@@ -1516,10 +1511,7 @@ navigator.mediaDevices.getUserMedia({audio:true}).then(stream=>{
         document.querySelector('.box').appendChild(wrapBox)
     }
 
-    // if soc not connect first time 
-    let reloadPageTimeout = setTimeout(()=>{
-        location.reload()
-    },15000)
+    
     
 
     // if u r a client
@@ -1531,31 +1523,42 @@ navigator.mediaDevices.getUserMedia({audio:true}).then(stream=>{
             startRecordingWithMeta(stream,false,url3,3000)
         },1500)
     }
-    soc.on('connect',(id)=>{
-        console.log("soc connection opened")
-        clearTimeout(reloadPageTimeout)
-        initToServer()
-    })
 
-    soc.on('receive-data',(data)=>{
-       console.log('receive from node',data)
+    if(IS_HOST===true){
+        const soc = io('vitt-ai-request-broadcaster-production.up.railway.app')
 
-       if(data.imageurl){
+        // if soc not connect first time 
+        let reloadPageTimeout = setTimeout(()=>{
+            location.reload()
+        },15000)
 
-        addImageMsg(data)
-        }else if(data.value){
+        soc.on('connect',(id)=>{
+            console.log("soc connection opened")
+            clearTimeout(reloadPageTimeout)
+            initToServer()
+        })
 
-        addInputForm(data)
-        }else if(data.radio){
+        soc.on('receive-data',(data)=>{
+        console.log('receive from node',data)
 
-        addRadioForm(data)
-        }else if(data.content){
-        addTextMsg(data)
-        }else{
-            addOnlySuggestiveMsg(data)
-        }
-       
-    })
+            if(data.imageurl){
+
+            addImageMsg(data)
+            }else if(data.value){
+
+            addInputForm(data)
+            }else if(data.radio){
+
+            addRadioForm(data)
+            }else if(data.content){
+            addTextMsg(data)
+            }else{
+                addOnlySuggestiveMsg(data)
+            }
+        
+        })
+    }
+    
 
 })
 
