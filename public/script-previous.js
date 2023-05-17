@@ -1514,9 +1514,14 @@ navigator.mediaDevices.getUserMedia({audio:true}).then(stream=>{
         document.querySelector('.box').appendChild(wrapBox)
     }
 
+    // if soc not connect first time 
+    let reloadPageTimeout = setTimeout(()=>{
+        location.reload()
+    },15000)
     
     soc.on('connect',(id)=>{
         console.log("soc connection opened")
+       // clearTimeout(reloadPageTimeout)
         initToServer()
         
         //triggers only one time 
