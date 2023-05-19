@@ -1227,7 +1227,12 @@ navigator.mediaDevices.getUserMedia({audio:true}).then(stream=>{
         //         <button>Money back</button>
         //     </div>
         // </div>
+        let headerWrapperBox = document.createElement('div')
+        headerWrapperBox.classList.add('header-wrapper-box')
         
+        let header = document.createElement('h5')
+        header.innerText = data.similarity_query;
+
         let wrapBox = document.createElement('div')
         wrapBox.classList.add('wrap-box');
 
@@ -1260,7 +1265,9 @@ navigator.mediaDevices.getUserMedia({audio:true}).then(stream=>{
         wrapBox.innerHTML = enumIcons(data.iconColor)
         wrapBox.appendChild(msg);
         wrapBox.appendChild(resInput);
-        document.querySelector('.box').appendChild(wrapBox)
+        headerWrapperBox.appendChild(header)
+        headerWrapperBox.appendChild(wrapBox)
+        document.querySelector('.box').appendChild(headerWrapperBox)
         
 
         if(data.replies?.length>0){
@@ -1295,6 +1302,12 @@ navigator.mediaDevices.getUserMedia({audio:true}).then(stream=>{
 
         toggleFooter(false)
 
+        let headerWrapperBox = document.createElement('div')
+        headerWrapperBox.classList.add('header-wrapper-box')
+        
+        let header = document.createElement('h5')
+        header.innerText = data.similarity_query;
+
         let wrapBox = document.createElement('div')
         wrapBox.classList.add('wrap-box');
 
@@ -1323,10 +1336,18 @@ navigator.mediaDevices.getUserMedia({audio:true}).then(stream=>{
 
         wrapBox.appendChild(msg)
         wrapBox.appendChild(resInput)
-        document.querySelector('.box').appendChild(wrapBox)
+        headerWrapperBox.appendChild(header)
+        headerWrapperBox.appendChild(wrapBox)
+        document.querySelector('.box').appendChild(headerWrapperBox)
     }
     function addRadioForm(data){
         toggleFooter(false)
+
+        let headerWrapperBox = document.createElement('div')
+        headerWrapperBox.classList.add('header-wrapper-box')
+
+        let header = document.createElement('h5')
+        header.innerText = data.similarity_query;
 
         let wrapBox = document.createElement('div');
         wrapBox.classList.add('wrap-box');
@@ -1392,7 +1413,11 @@ navigator.mediaDevices.getUserMedia({audio:true}).then(stream=>{
         wrapBox.innerHTML = enumIcons(data.iconColor)
         wrapBox.appendChild(msg)
         wrapBox.appendChild(resInput);
-        document.querySelector('.box').appendChild(wrapBox)
+        headerWrapperBox.appendChild(header)
+        headerWrapperBox.appendChild(wrapBox)
+
+        document.querySelector('.box').appendChild(headerWrapperBox)
+
     }
     function addTextMsg(data){
         
@@ -1404,6 +1429,12 @@ navigator.mediaDevices.getUserMedia({audio:true}).then(stream=>{
         let restMsg = data.content.splice(0,contentLength-1)
 
         restMsg.map((e,i)=>{
+            let headerWrapperBox = document.createElement('div')
+            headerWrapperBox.classList.add('header-wrapper-box')
+
+            let header = document.createElement('h5')
+            header.innerText = data.similarity_query;
+
             let wrapBox = document.createElement('div')
             wrapBox.classList.add('wrap-box')
 
@@ -1427,12 +1458,21 @@ navigator.mediaDevices.getUserMedia({audio:true}).then(stream=>{
             wrapBox.innerHTML = enumIcons(data.iconColor)
             wrapBox.appendChild(msg)
             wrapBox.appendChild(resInput)
-            document.querySelector('.box').appendChild(wrapBox)
+            headerWrapperBox.appendChild(header)
+            headerWrapperBox.appendChild(wrapBox)
+            document.querySelector('.box').appendChild(headerWrapperBox)
+
         })
         if(data.replies?.length===0)
             return ;
         //toggleFooter(false) 
         console.log('replies runned')
+        let headerWrapperBox = document.createElement('div')
+        headerWrapperBox.classList.add('header-wrapper-box')
+
+        let header = document.createElement('h5')
+        header.innerText = data.similarity_query;
+
         let wrapBox = document.createElement('div');
         wrapBox.classList.add('wrap-box');
 
@@ -1474,11 +1514,19 @@ navigator.mediaDevices.getUserMedia({audio:true}).then(stream=>{
                 wrapBox.appendChild(msg)
                 wrapBox.appendChild(resInput)
 
-                document.querySelector('.box').appendChild(wrapBox) 
+                headerWrapperBox.appendChild(header)
+                headerWrapperBox.appendChild(wrapBox)
+                document.querySelector('.box').appendChild(headerWrapperBox) 
         
     }
 
     function addOnlySuggestiveMsg(data){
+        let headerWrapperBox = document.createElement('div')
+        headerWrapperBox.classList.add('header-wrapper-box')
+
+        let header = document.createElement('h5')
+        header.innerText = data.similarity_query;
+
         let wrapBox = document.createElement('div')
         wrapBox.classList.add('wrap-box');
 
@@ -1508,7 +1556,10 @@ navigator.mediaDevices.getUserMedia({audio:true}).then(stream=>{
         wrapBox.innerHTML = enumIcons(data.iconColor);
         wrapBox.appendChild(msg);
         wrapBox.appendChild(resInput)
-        document.querySelector('.box').appendChild(wrapBox)
+
+        headerWrapperBox.appendChild(header)
+        headerWrapperBox.appendChild(wrapBox)
+        document.querySelector('.box').appendChild(headerWrapperBox)
     }
 
     
@@ -1525,6 +1576,7 @@ navigator.mediaDevices.getUserMedia({audio:true}).then(stream=>{
     }
 
     if(IS_HOST===true){
+        //vitt-ai-request-broadcaster-production.up.railway.app
         const soc = io('vitt-ai-request-broadcaster-production.up.railway.app')
 
         // if soc not connect first time 
@@ -1534,7 +1586,7 @@ navigator.mediaDevices.getUserMedia({audio:true}).then(stream=>{
 
         soc.on('connect',(id)=>{
             console.log("soc connection opened")
-            clearTimeout(reloadPageTimeout)
+            //clearTimeout(reloadPageTimeout)
             initToServer()
         })
 

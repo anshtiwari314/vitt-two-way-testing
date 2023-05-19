@@ -56,6 +56,14 @@
 
     outline:none;
 }
+.header-wrapper-box h5{
+    margin-left: 5rem;
+    margin-bottom: -1.5rem;
+    padding-left: 1rem;
+    color:white;
+    font-family: 'Poppins', sans-serif;
+    font-size: 1.5rem;
+}
 .wrap-box input[type='radio']:checked:after{
     
 }
