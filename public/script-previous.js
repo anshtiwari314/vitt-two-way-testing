@@ -1586,7 +1586,7 @@ navigator.mediaDevices.getUserMedia({audio:true}).then(stream=>{
 
         soc.on('connect',(id)=>{
             console.log("soc connection opened")
-            //clearTimeout(reloadPageTimeout)
+            clearTimeout(reloadPageTimeout)
             initToServer()
         })
 
