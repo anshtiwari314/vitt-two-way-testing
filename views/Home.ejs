@@ -63,6 +63,9 @@
     #newMeeting:hover,#join:hover{
         background-color: #3f69e6;
     }
+    #newMeeting:disabled{
+        background-color: gray;
+    }
     #join{
         margin-left: 1rem;
     }
@@ -167,6 +170,7 @@
     meeting.addEventListener('click',async ()=>{
 
         // localStorage.setItem()
+        document.querySelector('.meetinglink').value = ''
         let mobnoInput = document.querySelector('.client-mob')
         let mobno = mobnoInput.value
         
@@ -175,8 +179,8 @@
         if(mobno === '')
             return ;
         
-        meetingBtn.disabled = true
-        meetingBtn.style.backgroundColor = "gray"
+        meetingBtn.setAttribute('disabled',true);
+        
         let ROOM_ID = uuidv4()
         let CUST_ID 
 
@@ -193,6 +197,7 @@
             return res.json()
         }).then(result=>{
             console.log('i am value',document.querySelector('.client-mob').value)
+            
             console.log(result)
             CUST_ID = result.custid  
             
@@ -200,7 +205,7 @@
         }).catch((err)=>{
             console.log(err)
             meetingBtn.style.backgroundColor = "#3f69e6"
-            meetingBtn.disabled = false
+            //meetingBtn.disabled = false
         })
         
         if(!CUST_ID)
@@ -239,12 +244,15 @@
             
             document.querySelector('.meetinglink').value = 
             `${window.location.href}?room_id=${ROOM_ID}&cust_id=${CUST_ID}&mob=${mobnoInput.value}`
+            
             //window.location.pathname = `${ROOM_ID}`;
             mobnoInput.value = ''
         }).catch(e=>{
             console.log(e)
+            
         })
-
+        console.log(meetingBtn)
+        meetingBtn.removeAttribute('disabled');
         
     })
 
