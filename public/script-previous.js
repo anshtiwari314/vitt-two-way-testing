@@ -125,7 +125,8 @@ let FIRST_TIME_CONNECT = true;
 
 const url1 = `https://19vnck5aw8.execute-api.ap-south-1.amazonaws.com/Prod/save-adminaudio`
 const url2 = `https://19vnck5aw8.execute-api.ap-south-1.amazonaws.com/Prod/save-clientaudio`
-const url3 = `https://tso4smyf1j.execute-api.ap-south-1.amazonaws.com/test/transcription-clientaudio`
+//const url3 = `https://tso4smyf1j.execute-api.ap-south-1.amazonaws.com/test/transcription-clientaudio`
+const url3 = `https://f6p70odi12.execute-api.ap-south-1.amazonaws.com`
 
 let options1 ={
     host: "vitt-peerjs-server-production.up.railway.app",
