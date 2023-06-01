@@ -119,19 +119,16 @@ let FIRST_TIME_CONNECT = true;
 
 if(IS_HOST===true)
 HOST_ID=myId
-// let baseNgrokUrl = `https://fa74-182-72-76-34.ngrok-free.app`
-// let url1 = `${baseNgrokUrl}/admin`
-// let url2 = `${baseNgrokUrl}/admin-client`
-//let url3 = `${baseNgrokUrl}/client`
 
-//const url1 = `https://19vnck5aw8.execute-api.ap-south-1.amazonaws.com/Prod/save-adminaudio`
-//const url2 = `https://19vnck5aw8.execute-api.ap-south-1.amazonaws.com/Prod/save-clientaudio`
+
+const url1 = `https://19vnck5aw8.execute-api.ap-south-1.amazonaws.com/Prod/save-adminaudio`
+const url2 = `https://19vnck5aw8.execute-api.ap-south-1.amazonaws.com/Prod/save-clientaudio`
 //const url3 = `https://tso4smyf1j.execute-api.ap-south-1.amazonaws.com/test/transcription-clientaudio`
-//const url3 = `https://f6p70odi12.execute-api.ap-south-1.amazonaws.com`
+const url3 = `https://f6p70odi12.execute-api.ap-south-1.amazonaws.com`
 
-const url1 = `http://localhost:5004/admin`
-const url2 = `http://localhost:5005/admin-client`
-const url3 = `https://5bc3-182-72-76-34.ngrok-free.app/client`
+// const url1 = `http://localhost:5004/admin`
+// const url2 = `http://localhost:5005/admin-client`
+// const url3 = `https://5bc3-182-72-76-34.ngrok-free.app/client`
 
 let options1 ={
     host: "vitt-peerjs-server-production.up.railway.app",
