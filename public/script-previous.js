@@ -117,7 +117,8 @@ let IS_SCREEN_ZOOM = false;
 let MY_SOCKET_ID 
 let FIRST_TIME_CONNECT = true; 
 
-
+if(IS_HOST===true)
+HOST_ID=myId
 // let baseNgrokUrl = `https://fa74-182-72-76-34.ngrok-free.app`
 // let url1 = `${baseNgrokUrl}/admin`
 // let url2 = `${baseNgrokUrl}/admin-client`
